@@ -4,10 +4,8 @@ package controllers;
 //import actors.mail.EmailConfirmacaoMessage;
 //import actors.mail.EmailOperacionalMessage;
 import com.fasterxml.jackson.databind.JsonNode;
-import models.Grupo;
-import models.Usuario;
-import models.UsuarioRepository;
-import models.GrupoRepository;
+import models.*;
+import models.repository.*;
 
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -16,8 +14,6 @@ import play.libs.Json;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 //import services.EmailService;
@@ -37,11 +33,21 @@ public class UserController extends Controller{
 
     private final UsuarioRepository usuarioRepository;
     private final GrupoRepository grupoRepository;
+    private final CampusRepository campusRepository;
+    private final EstadoRepository estadoRepository;
+    private final SolicitacaoRepository solicitacaoRepository;
+    private final EstudanteRepository estudanteRepository;
 
     @Inject
-    public UserController(UsuarioRepository usuarioRepository, GrupoRepository grupoRepository) {
+    public UserController(UsuarioRepository usuarioRepository, GrupoRepository grupoRepository,
+                          EstadoRepository estadoRepository, CampusRepository campusRepository,
+                          SolicitacaoRepository solicitacaoRepository, EstudanteRepository estudanteRepository) {
         this.usuarioRepository = usuarioRepository;
         this.grupoRepository = grupoRepository;
+        this.campusRepository = campusRepository;
+        this.estadoRepository = estadoRepository;
+        this.solicitacaoRepository = solicitacaoRepository;
+        this.estudanteRepository = estudanteRepository;
     }
 
     public Result hello(){
@@ -67,6 +73,30 @@ public class UserController extends Controller{
         return ok(play.libs.Json.toJson(usuario));
     }
 
+    public Result campus(){
+        List<Campus> campusList = (List<Campus>) campusRepository.findAll();
+
+        return ok(play.libs.Json.toJson(campusList));
+    }
+
+    public Result estados(){
+        List<Estado> estadoList = (List<Estado>) estadoRepository.findAll();
+
+        return ok(play.libs.Json.toJson(estadoList));
+    }
+
+    public Result solicitacoes(){
+        List<SolicitacaoModelo> solicitacaoList = (List<SolicitacaoModelo>) solicitacaoRepository.findAll();
+
+        return ok(play.libs.Json.toJson(solicitacaoList));
+    }
+
+    public Result estudantes(){
+        List<EstudanteModelo> estudanteModeloList = (List<EstudanteModelo>) estudanteRepository.findAll();
+
+        return ok(play.libs.Json.toJson(estudanteModeloList));
+    }
+
     public Result getAllUsers(){
 
         List<Usuario> usuarioList = (List<Usuario>) usuarioRepository.findAll();
@@ -82,7 +112,9 @@ public class UserController extends Controller{
         JsonNode jsonBodyRequest = request().body().asJson();
         final Usuario usuarioRequest = Json.fromJson(jsonBodyRequest, Usuario.class);
 
-        return ok(Json.toJson(usuarioRequest));
+        final Usuario usuarioSaved = usuarioRepository.save(usuarioRequest);
+
+        return ok(Json.toJson(usuarioSaved));
     }
 
     public Result updateUser(Long id){
