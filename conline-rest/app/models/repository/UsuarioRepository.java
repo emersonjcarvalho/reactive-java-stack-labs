@@ -1,4 +1,4 @@
-package models;
+package models.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import models.Usuario;

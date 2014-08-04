@@ -1,5 +1,6 @@
-package models;
+package models.repository;
 
+import models.Grupo;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.inject.Named;

@@ -20,6 +20,11 @@ GET     /users/:id                  @controllers.UserController.getUserById(id: 
 POST    /users                      @controllers.UserController.saveUser
 PUT     /users/:id                  @controllers.UserController.updateUser(id: Long)
 
+GET     /campus                     @controllers.UserController.campus
+GET     /estados                    @controllers.UserController.estados
+GET     /solicitacoes               @controllers.UserController.solicitacoes
+GET     /estudantes                 @controllers.UserController.estudantes
+
 OPTIONS     /upload      				controllers.Application.option()
 OPTIONS    /upload/:id  				controllers.Application.optionID(id: Long)
 
