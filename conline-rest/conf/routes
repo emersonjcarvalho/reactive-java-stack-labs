@@ -5,5 +5,23 @@
 # Home page
 GET     /                           controllers.Application.index()
 
+GET         /s3/:cpf                controllers.Application.s3(cpf: String)
+GET         /cache/:key             controllers.Application.getCache(key: String)
+POST        /upload/:cpf            controllers.Application.uploadFoto(cpf: String)
+
+### TESTS Send-Mail (SES)
+GET         /ses/:to                @controllers.Application.ses(to: String)
+
+### TESTS SPRING-DATA-JPA
+GET     /hello                      @controllers.UserController.hello
+
+GET     /users                      @controllers.UserController.getAllUsers
+GET     /users/:id                  @controllers.UserController.getUserById(id: Long)
+POST    /users                      @controllers.UserController.saveUser
+PUT     /users/:id                  @controllers.UserController.updateUser(id: Long)
+
+OPTIONS     /upload      				controllers.Application.option()
+OPTIONS    /upload/:id  				controllers.Application.optionID(id: Long)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
