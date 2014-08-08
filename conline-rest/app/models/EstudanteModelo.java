@@ -26,7 +26,7 @@ import org.hibernate.annotations.CascadeType;
 
 @Entity(name = "est_estudante")
 @Table(name = "est_estudante")
-public class EstudanteModelo implements Serializable {
+public class EstudanteModelo  {//implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -90,8 +90,10 @@ public class EstudanteModelo implements Serializable {
     private String matricula;
     @Column(name = "EST_CD_LOCAL_ENTREGA")
     private Character localEntrega;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "estudante")
-    private Set<SolicitacaoModelo> listaSolicitacao = new HashSet<SolicitacaoModelo>(0);
+
+    //@OneToMany(fetch = FetchType.LAZY, mappedBy = "estudante")
+    //private Set<SolicitacaoModelo> listaSolicitacao = new HashSet<SolicitacaoModelo>(0);
+
     //
     @Column(name = "EST_DS_NOME_ARQ_FOTO")
     private String nomeArquivoFoto;
@@ -340,6 +342,7 @@ public class EstudanteModelo implements Serializable {
         this.codigo_area_celular = codigo_area_celular;
     }
 
+    /*
     public Set<SolicitacaoModelo> getListaSolicitacao() {
         return listaSolicitacao;
     }
@@ -347,6 +350,7 @@ public class EstudanteModelo implements Serializable {
     public void setListaSolicitacao(Set<SolicitacaoModelo> listaSolicitacao) {
         this.listaSolicitacao = listaSolicitacao;
     }
+    */
 
     public String getNomeArquivoFoto() {
         return nomeArquivoFoto;

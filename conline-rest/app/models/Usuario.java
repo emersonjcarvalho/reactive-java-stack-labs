@@ -13,14 +13,18 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    public String nome;
+    //public String nome;
+    //public String login;
+    //public String senha;
 
-    public String login;
-
-    public String senha;
+    public String username;
+    public String password;
+    public Boolean enable;
+    public String email;
 
     //@JoinColumn(name = "usuario_id")
-    @ManyToOne
-    public Grupo grupo;
+
+    //@ManyToOne
+    //public Grupo grupo;
 
 }

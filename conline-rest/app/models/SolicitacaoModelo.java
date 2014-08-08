@@ -26,7 +26,7 @@ import org.hibernate.annotations.CascadeType;
 
 @Entity(name = "sol_solicitacao")
 @Table(name = "sol_solicitacao")
-public class SolicitacaoModelo implements Serializable {
+public class SolicitacaoModelo {//implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,6 +37,9 @@ public class SolicitacaoModelo implements Serializable {
 
     //@ManyToOne(fetch = FetchType.LAZY)
     //@JoinColumn(name = "SOL_ID_ESTUDANTE", nullable = false)
+
+    @ManyToOne
+    @JoinColumn(name = "SOL_ID_ESTUDANTE")
     private EstudanteModelo estudante;
 
     //@ManyToOne(fetch = FetchType.LAZY)
