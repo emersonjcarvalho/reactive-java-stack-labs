@@ -25,8 +25,10 @@ GET     /estados                    @controllers.UserController.estados
 GET     /solicitacoes               @controllers.UserController.solicitacoes
 GET     /estudantes                 @controllers.UserController.estudantes
 
-OPTIONS     /upload      				controllers.Application.option()
-OPTIONS    /upload/:id  				controllers.Application.optionID(id: Long)
+OPTIONS     /upload      	        controllers.Application.option()
+OPTIONS    /upload/:id  			controllers.Application.optionID(id: Long)
+
+OPTIONS     /users      	        controllers.UserController.option()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

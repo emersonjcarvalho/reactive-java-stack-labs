@@ -32,18 +32,18 @@ public class UserController extends Controller{
     //final EmailService emailService = new EmailService(ActorHelper.getActorSystem());
 
     private final UsuarioRepository usuarioRepository;
-    private final GrupoRepository grupoRepository;
+    //private final GrupoRepository grupoRepository;
     private final CampusRepository campusRepository;
     private final EstadoRepository estadoRepository;
     private final SolicitacaoRepository solicitacaoRepository;
     private final EstudanteRepository estudanteRepository;
 
     @Inject
-    public UserController(UsuarioRepository usuarioRepository, GrupoRepository grupoRepository,
+    public UserController(UsuarioRepository usuarioRepository,
                           EstadoRepository estadoRepository, CampusRepository campusRepository,
                           SolicitacaoRepository solicitacaoRepository, EstudanteRepository estudanteRepository) {
         this.usuarioRepository = usuarioRepository;
-        this.grupoRepository = grupoRepository;
+        //this.grupoRepository = grupoRepository;
         this.campusRepository = campusRepository;
         this.estadoRepository = estadoRepository;
         this.solicitacaoRepository = solicitacaoRepository;
@@ -52,23 +52,25 @@ public class UserController extends Controller{
 
     public Result hello(){
 
-        Grupo operadores = new Grupo("Operadores");
+        //Grupo operadores = new Grupo("Operadores");
 
-        grupoRepository.save(operadores);
+        //grupoRepository.save(operadores);
 
         final Usuario usuario = new Usuario();
-        usuario.id = 2L;
-        usuario.nome = "Beatriz Carvalho";
-        usuario.login = "bia.carvalho";
-        usuario.senha = "1234";
+        //usuario.id = 2L;
+        //usuario.nome = "Beatriz Carvalho";
+        usuario.username = "bia.carvalho";
+        usuario.password = "1234";
+        usuario.enable = false;
+        usuario.email = "bia@carvalho.com";
 
-        usuario.grupo = operadores;
+        //usuario.grupo = operadores;
 
         usuarioRepository.save(usuario);
 
         System.out.println("");
-        System.out.println("usuario.nome: " + usuario.nome);
-        System.out.println("usuario.grupo.descricao: " + usuario.grupo.descricao);
+        System.out.println("usuario.username: " + usuario.username + " | usuario.password: " + usuario.password);
+        //System.out.println("usuario.grupo.descricao: " + usuario.grupo.descricao);
 
         return ok(play.libs.Json.toJson(usuario));
     }

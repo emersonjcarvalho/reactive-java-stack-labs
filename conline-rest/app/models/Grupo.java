@@ -9,11 +9,11 @@ import javax.persistence.Id;
  * Created by w6c on 04/08/2014.
  */
 
-@Entity
+//@Entity
 public class Grupo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
     public String descricao;
