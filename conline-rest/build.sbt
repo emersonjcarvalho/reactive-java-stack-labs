@@ -11,13 +11,16 @@ scalaVersion := "2.11.1"
 libraryDependencies ++= Seq(
   PlayImport.javaCore,
   PlayImport.javaJpa,
+  //"joda-time" % "joda-time-hibernate" % "1.3",
+  //"com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % "2.2.3",
   "org.apache.commons" % "commons-email" % "1.3.3",
   "com.amazonaws" % "aws-java-sdk" % "1.8.4",
   "org.springframework" % "spring-context" % "3.2.2.RELEASE",
   "javax.inject" % "javax.inject" % "1",
   "org.springframework.data" % "spring-data-jpa" % "1.3.2.RELEASE",
   "org.springframework" % "spring-expression" % "3.2.2.RELEASE",
-  "org.hibernate" % "hibernate-entitymanager" % "3.6.10.Final",
+  //"org.hibernate" % "hibernate-entitymanager" % "3.6.10.Final",
+  "org.hibernate" % "hibernate-entitymanager" % "4.2.0.Final",
   "mysql" % "mysql-connector-java" % "5.1.18",
   PlayImport.cache
   //javaJdbc,
