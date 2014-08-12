@@ -128,6 +128,13 @@ public class Application extends Controller {
         }
     }
 
+    public static Result apagaCache(String key){
+
+        Cache.remove(key);
+
+        return ok("Object: " + key + " - Excluido com sucesso");
+    }
+
     /**
      * 1 - Get File of MultiPart Body
      * 2 - Formart name of file to Persiste in S3

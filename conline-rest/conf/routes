@@ -15,6 +15,7 @@ OPTIONS     /upload/foto/:id  		controllers.UploadAsyncController.optionID(id: L
 
 ###########
 GET         /cache/:key             controllers.Application.getCache(key: String)
+GET         /cache/apaga/:key       controllers.Application.apagaCache(key: String)
 POST        /upload/:cpf            controllers.Application.uploadFoto(cpf: String)
 OPTIONS     /upload      	        controllers.Application.option()
 OPTIONS     /upload/:id  			controllers.Application.optionID(id: Long)
