@@ -4,19 +4,22 @@ import java.io.Serializable;
 //import java.util.Date;
 //import java.sql.Date;
 
-
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import utils.CustomJsonDateDeserializer;
-//import org.joda.time.DateTime;
+import org.joda.time.DateTime;
+
+import org.joda.time.contrib.hibernate.PersistentDateTime;
 
 /**
  * Created by emerson on 04/08/2014.
@@ -48,14 +51,15 @@ public class EstudanteModelo  {//implements Serializable {
     @Column(name = "EST_CD_SEXO")
     public Character sexo;
 
-    @Column(name = "EST_DT_NASCIMENTO")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    @JsonDeserialize(using = CustomJsonDateDeserializer.class)
-    public Date dataNascimento;
-
     //@Column(name = "EST_DT_NASCIMENTO")
-    //@Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
-    //public DateTime dataNascimento;
+    //@Temporal(javax.persistence.TemporalType.DATE)
+    //@JsonDeserialize(using = CustomJsonDateDeserializer.class)
+    //public Date dataNascimento;
+
+    @Column(name = "EST_DT_NASCIMENTO")
+    @Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
+    //@JsonFormat(pattern = "yyyy-MM-dd")
+    public DateTime dataNascimento; //public DateTime dataNascimento;
 
     //@Column(name = "EST_DS_URL_FOTO")
     //public String urlFoto;

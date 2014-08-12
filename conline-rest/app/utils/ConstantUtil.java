@@ -25,4 +25,21 @@ public class ConstantUtil {
     public static final String KEY_MULTIPARTI_FILE_UPLOAD_FOTO = "fotoFile";
     public static final String KEY_MULTIPARTI_FILE_UPLOAD_DOCUMENTO = "documentoFile";
 
+
+
+    //#####################################    ########################
+    public static final double PRECO_CARTEIRINHA = 25.0;
+    public static final String PAGSEGURO_DESCRICAO_PRODUTO = "Carteira de Estudante DCE UNIFACS";
+    public static final String PAGSEGURO_VALOR = "25.00";
+    public static final String PAGSEGURO_PESO = "0";
+    public static final String PAGSEGURO_CODIGO_PAIS = "BRA";
+    //
+    //VALORES FIXADOS TEMPORARIAMENTE P/ EVITAR ACESSOS AO BANCO DE DADOS
+    public static final long ID_INSTITUICAO = 1; //UNIFACS
+    public static final long ID_CARTEIRA = 1; //DCE UNIFACS
+    public static final long ID_STATUS_SOL_INICIAL = 1; //Aguardando Analise
+    public static final long ID_FORMA_PAGAMENTO = 1; //PAGSEGURO
+
+
+
 }

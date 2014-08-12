@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import models.*;
 import models.repository.*;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.libs.Json;
+import utils.ConstantUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,7 +21,6 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.DatatypeConverter;
@@ -46,57 +49,35 @@ public class SolicitacaoController extends Controller{
     }
 
     public Result saveSolicitacao(){
-
-        System.out.println("#### saveSolicitacao: " + new Date());
-
         JsonNode jsonBodyRequest = request().body().asJson();
-        //final Usuario usuarioRequest = Json.fromJson(jsonBodyRequest, Usuario.class);
 
+        System.out.println("##################################################################");
         System.out.println(jsonBodyRequest.toString());
-
-        System.out.println("##################################################################");
         System.out.println("##################################################################");
 
-        //ObjectMapper mapper = new ObjectMapper();
-        //mapper.registerModule(new JodaModule());
-        //Json.setObjectMapper(mapper);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JodaModule());
+        Json.setObjectMapper(mapper);
 
         SolicitacaoModelo solicitacaoRequest = Json.fromJson(jsonBodyRequest, SolicitacaoModelo.class);
-
         final EstudanteModelo estudanteRequest = solicitacaoRequest.estudante;
 
-        System.out.println("#### estudanteRequest ###");
-        System.out.println("estudanteRequest.cpf: " + estudanteRequest.cpf);
-        System.out.println("estudanteRequest.estado.id: " + estudanteRequest.estado.id);
-        System.out.println("estudanteRequest.dataNascimento: " + estudanteRequest.dataNascimento);
-        System.out.println("estudanteRequest.dataNascimento.getTime: " + estudanteRequest.dataNascimento.getTime());
         System.out.println("####################################");
+        System.out.println("estudanteRequest.dataNascimento: " + estudanteRequest.dataNascimento);
 
-        //Convert ISO 8601(padrao JSON) to DateTime
-        //Calendar calendar = javax.xml.bind.DatatypeConverter.parseDateTime(estudanteRequest.dataNascimento.toString());
-        //estudanteRequest.dataNascimento = calendar.getTime();
-
-        //System.out.println("dataNascimentoV2: " + estudanteRequest.dataNascimento);
-
-        /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-        ISO8601DateFormat iso8601DateFormat = new ISO8601DateFormat();
-
-        try {
-            Date dateAux = iso8601DateFormat.parse(estudanteRequest.dataNascimento.toString());
-            estudanteRequest.dataNascimento = null;
-
-            System.out.println("dateAux: " + dateAux);
-
-            estudanteRequest.dataNascimento = dateAux;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        */
-
+        //estudante.setNomeArquivoFoto(nomeArquivoFotoVirtual);
+        //estudante.setNomeArquivoDocumento(this.nomeFileDocumento);
         final EstudanteModelo estudanteSaved = estudanteRepository.save(estudanteRequest);
 
+
         //DEFINICOES SOLICITACAO
+        solicitacaoRequest.dataSolicitacao = new DateTime(DateTimeZone.forID("America/Sao_Paulo"));
+        solicitacaoRequest.valorCarteira = ConstantUtil.PRECO_CARTEIRINHA;
+        solicitacaoRequest.idStatusSolicitacao = ConstantUtil.ID_STATUS_SOL_INICIAL;
+        solicitacaoRequest.flagPago = false;
+        solicitacaoRequest.codigoLocalEntrega = estudanteRequest.localEntrega;
+
         solicitacaoRequest.estudante = estudanteRequest;
 
         //final Usuario usuarioSaved = usuarioRepository.save(usuarioRequest);
@@ -105,6 +86,9 @@ public class SolicitacaoController extends Controller{
         return ok(Json.toJson(solicitacaoSaved));
     }
 
+
+    // ########################################################################################################
+    // ########################################### COMBO-LISTS    #############################################
     public Result campusList(){
 
         final List<Campus> campusList = (List<Campus>) campusRepository.findAll();
@@ -125,9 +109,9 @@ public class SolicitacaoController extends Controller{
         return ok(Json.toJson(estadoList));
     }
 
+
     // ########################################################################################################
     // ############################################## ENABLE CORS #############################################
-
     private static Result allowCORS() {
         response().setHeader("Access-Control-Allow-Origin", "*");
         response().setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
