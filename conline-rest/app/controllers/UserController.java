@@ -4,6 +4,8 @@ package controllers;
 //import actors.mail.EmailConfirmacaoMessage;
 //import actors.mail.EmailOperacionalMessage;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import models.*;
 import models.repository.*;
 
@@ -14,6 +16,7 @@ import play.libs.Json;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 //import services.EmailService;
@@ -90,6 +93,11 @@ public class UserController extends Controller{
     public Result solicitacoes(){
         List<SolicitacaoModelo> solicitacaoList = (List<SolicitacaoModelo>) solicitacaoRepository.findAll();
 
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JodaModule());
+        mapper.setDateFormat(sdf);
+        Json.setObjectMapper(mapper);
         return ok(play.libs.Json.toJson(solicitacaoList));
     }
 

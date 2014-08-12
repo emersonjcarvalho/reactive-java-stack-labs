@@ -6,8 +6,20 @@
 GET     /                           controllers.Application.index()
 
 GET         /s3/:cpf                controllers.Application.s3(cpf: String)
+
+################################    UPLOAD   ################################
+
+POST        /upload/foto/:cpf       controllers.UploadAsyncController.fotoFileUpload(cpf: String)
+OPTIONS     /upload/foto      	    controllers.UploadAsyncController.option()
+OPTIONS     /upload/foto/:id  		controllers.UploadAsyncController.optionID(id: Long)
+
+###########
 GET         /cache/:key             controllers.Application.getCache(key: String)
 POST        /upload/:cpf            controllers.Application.uploadFoto(cpf: String)
+OPTIONS     /upload      	        controllers.Application.option()
+OPTIONS     /upload/:id  			controllers.Application.optionID(id: Long)
+###################################################################################
+
 
 ### TESTS Send-Mail (SES)
 GET         /ses/:to                @controllers.Application.ses(to: String)
@@ -23,8 +35,7 @@ PUT     /users/:id                  @controllers.UserController.updateUser(id: L
 GET     /solicitacoes               @controllers.UserController.solicitacoes
 GET     /estudantes                 @controllers.UserController.estudantes
 
-OPTIONS     /upload      	        controllers.Application.option()
-OPTIONS    /upload/:id  			controllers.Application.optionID(id: Long)
+
 
 OPTIONS     /users      	        controllers.UserController.option()
 

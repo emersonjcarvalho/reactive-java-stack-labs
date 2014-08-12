@@ -2,7 +2,7 @@ package models;
 
 import java.io.Serializable;
 
-import java.util.Date;
+//import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +18,8 @@ import javax.persistence.Temporal;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
 /**
  * Created by emerson on 04/08/2014.
@@ -49,8 +51,11 @@ public class SolicitacaoModelo {//implements Serializable {
     public Long idStatusSolicitacao;
 
     @Column(name = "SOL_DT_SOLICITACAO")
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    public Date dataSolicitacao;
+    //@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    //public Date dataSolicitacao;
+    @Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
+    public DateTime dataSolicitacao;
+
 
     @Column(name = "SOL_VL_CARTEIRA")
     public Double valorCarteira;
@@ -59,16 +64,18 @@ public class SolicitacaoModelo {//implements Serializable {
     public Long valorPago;
 
     @Column(name = "SOL_DT_PAGAMENTO")
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    public Date dataPagamento;
+    //@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    //public Date dataPagamento;
+    @Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
+    public DateTime dataPagamento;
+
 
     @Column(name = "SOL_FL_PAGO")
     public Boolean flagPago;
 
     @Column(name = "SOL_ID_FORMA_PAGAMENTO")
-    private Long idFormaPagamento;
+    public Long idFormaPagamento;
 
     @Column(name = "SOL_CD_LOCAL_ENTREGA")
-    private Character codigoLocalEntrega;
-
+    public Character codigoLocalEntrega;
 }
