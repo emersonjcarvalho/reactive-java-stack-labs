@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import play.cache.Cache;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -29,6 +30,9 @@ public class UploadAsyncController extends Controller {
      *
      */
     public static Result fotoFileUpload(String cpf) {
+
+        String VAR_ERROR_NAME = "erroMessage";
+
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart picture = body.getFile(ConstantUtil.KEY_MULTIPARTI_FILE_UPLOAD_FOTO);
 
@@ -39,22 +43,43 @@ public class UploadAsyncController extends Controller {
 
             Cache.set(nomeFileFotoCache, picture.getFile());
 
-            String contentType = picture.getContentType();
-            System.out.println("<<<<<<<< uploadFoto -  contentType: " + contentType);
-            System.out.println("<<<<<<<< capturaExtensaoDoMimeType: " + extensao);
-
-            //return ok(file).as("image/jpeg");
             return ok(Json.toJson(Json.newObject().put("nomeFileFotoCache", nomeFileFotoCache)));
 
         } else {
             System.out.println("<<<<<<<< fotoFileUpload - ELSE = (picture != null) >>>>>>>>>>>>>");
 
-            //flash("error", "Missing file");
-            //return redirect(controllers.routes.Application.index());
-            return badRequest("<<<<<<<< fotoFileUpload - ELSE = (picture != null) >>>>>>>>>>>>>");
+            return badRequest( Json.newObject().put(VAR_ERROR_NAME, "O arquivo(Foto) com problema"));
         }
     }
 
+
+    public static Result documentoFileUpload(String cpf) {
+
+        String VAR_ERROR_NAME = "erroMessage";
+
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart documento = body.getFile(ConstantUtil.KEY_MULTIPARTI_FILE_UPLOAD_DOCUMENTO);
+
+        if (documento != null) {
+            String extensao =  ToolsUtil.capturaExtensaoDoMimeType(documento.getContentType());
+            String nomeFileDocumentoCache = ConstantUtil.PREFIX_DOCUMENTO + cpf + "." + extensao;
+
+            Cache.set(nomeFileDocumentoCache, documento.getFile());
+
+            String contentType = documento.getContentType();
+            System.out.println("<<<<<<<< documentoFileUpload -  contentType: " + contentType);
+            System.out.println("<<<<<<<< capturaExtensaoDoMimeType: " + extensao);
+
+            return ok(Json.toJson(Json.newObject().put("nomeFileDocumentoCache", nomeFileDocumentoCache)));
+
+        } else {
+            System.out.println("<<<<<<<< documentoFileUpload - ELSE = (picture != null) >>>>>>>>>>>>>");
+
+            //flash("error", "Missing file");
+            //return redirect(controllers.routes.Application.index());
+            return badRequest( Json.newObject().put(VAR_ERROR_NAME, "O arquivo(Documento) com problema"));
+        }
+    }
 
 
     // ########################################################################################################
