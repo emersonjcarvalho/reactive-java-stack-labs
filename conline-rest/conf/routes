@@ -13,6 +13,10 @@ POST        /upload/foto/:cpf       controllers.UploadAsyncController.fotoFileUp
 OPTIONS     /upload/foto      	    controllers.UploadAsyncController.option()
 OPTIONS     /upload/foto/:id  		controllers.UploadAsyncController.optionID(id: Long)
 
+POST        /upload/documento/:cpf  controllers.UploadAsyncController.documentoFileUpload(cpf: String)
+OPTIONS     /upload/documento      	controllers.UploadAsyncController.option()
+OPTIONS     /upload/documento/:id  	controllers.UploadAsyncController.optionID(id: Long)
+
 ###########
 GET         /cache/:key             controllers.Application.getCache(key: String)
 GET         /cache/apaga/:key       controllers.Application.apagaCache(key: String)
