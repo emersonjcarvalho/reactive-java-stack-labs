@@ -41,7 +41,6 @@ GET     /solicitacoes               @controllers.UserController.solicitacoes
 GET     /estudantes                 @controllers.UserController.estudantes
 
 
-
 OPTIONS     /users      	        controllers.UserController.option()
 
 
@@ -52,6 +51,7 @@ POST        /solicitacao                @controllers.SolicitacaoController.saveS
 
 OPTIONS     /solicitacao      	        controllers.SolicitacaoController.option()
 
+GET     /pagseguro                  controllers.SolicitacaoController.goPagSeguro()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
