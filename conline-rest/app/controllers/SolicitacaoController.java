@@ -14,11 +14,14 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.libs.Json;
 import utils.ConstantUtil;
+import utils.PagamentoUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
@@ -107,6 +110,79 @@ public class SolicitacaoController extends Controller{
         System.out.println("estadoList - ID" + System.identityHashCode(estadoList));
 
         return ok(Json.toJson(estadoList));
+    }
+
+
+    public static Result goPagSeguro(){
+
+        System.out.println("::: goPagSeguro :::");
+
+        //return redirect("http://www.pagseguro.com.br");
+
+        EstudanteModelo estudante = new EstudanteModelo();
+
+
+        Estado estado = new Estado();
+        estado.descricao = "São Paulo";
+        estado.sigla = "SP";
+
+        estudante.estado = estado;
+        estudante.cidade = "New York City";
+        estudante.bairro = "Queens";
+        estudante.cep = 40353630;
+        estudante.logradouro = "2º Revenue Str";
+        estudante.numeroEndereco = "915E";
+        estudante.complementoEndereco = "asdasdas";
+        estudante.nome = "Emerson Carvalho";
+        estudante.email = "emerson@startupland.com";
+        estudante.codigo_area_celular = 71;
+        estudante.celular = 88008800;
+
+        Long idSolicitacao = 343L;
+
+        String urlPagSeguro = "http://nyc.com";
+
+        urlPagSeguro = efetuarPagamento(getPagamentoPagSeguroPreenchido(String.valueOf(idSolicitacao), estudante));
+
+        return ok("urlPagSeguro: " + urlPagSeguro);
+    }
+
+
+    public static String efetuarPagamento(PagamentoPagSeguro pagamentoPagSeguro) {
+        PagamentoUtil pagamentoUtil = new PagamentoUtil();
+        return pagamentoUtil.enviaPagamentoPagSeguro(pagamentoPagSeguro);
+    }
+
+
+    public static PagamentoPagSeguro getPagamentoPagSeguroPreenchido(String idSolicitacao, EstudanteModelo estudante) {
+
+        //Estado estadoAux = new Estado();
+        //estadoAux.setSigla(estudante.getEstado());
+        //estadoAux = getEstadoByExample(estadoAux);
+
+        PagamentoPagSeguro pagamentoPagSeguro = new PagamentoPagSeguro();
+
+        pagamentoPagSeguro.setId(idSolicitacao);
+        pagamentoPagSeguro.setDescription(ConstantUtil.PAGSEGURO_DESCRICAO_PRODUTO);
+        pagamentoPagSeguro.setQuantity(new Integer(1));
+        pagamentoPagSeguro.setAmount(new BigDecimal(ConstantUtil.PAGSEGURO_VALOR));
+        pagamentoPagSeguro.setWeight(Long.valueOf(ConstantUtil.PAGSEGURO_PESO));
+        pagamentoPagSeguro.setCost(null);
+        pagamentoPagSeguro.setReference(idSolicitacao);
+        pagamentoPagSeguro.setCountry(ConstantUtil.PAGSEGURO_CODIGO_PAIS);
+        pagamentoPagSeguro.setState(estudante.estado.sigla); //pagamentoPagSeguro.setState(estadoAux.getSigla());
+        pagamentoPagSeguro.setCity(estudante.cidade);
+        pagamentoPagSeguro.setDistrict(estudante.bairro);
+        pagamentoPagSeguro.setPostalCode(estudante.cep.toString());
+        pagamentoPagSeguro.setStreet(estudante.logradouro);
+        pagamentoPagSeguro.setNumber(estudante.numeroEndereco);
+        pagamentoPagSeguro.setComplement(estudante.complementoEndereco);
+        pagamentoPagSeguro.setName(estudante.nome);
+        pagamentoPagSeguro.setEmail(estudante.email);
+        pagamentoPagSeguro.setAreaCode(estudante.codigo_area_celular.toString());
+        pagamentoPagSeguro.setFone(estudante.celular.toString());
+
+        return pagamentoPagSeguro;
     }
 
 
