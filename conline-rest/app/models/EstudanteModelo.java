@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import utils.CustomJsonDateDeserializer;
@@ -27,7 +28,7 @@ import org.joda.time.contrib.hibernate.PersistentDateTime;
 
 @Entity(name = "est_estudante")
 @Table(name = "est_estudante")
-public class EstudanteModelo  {//implements Serializable {
+public class EstudanteModelo {//implements Serializable {
 
     //public static final long serialVersionUID = 1L;
 
@@ -39,9 +40,11 @@ public class EstudanteModelo  {//implements Serializable {
     @Column(name = "EST_DS_CPF", unique = true, length = 11)
     public String cpf;
 
+    @NotEmpty(message = "POHAAA veio em branco")
     @Column(name = "EST_DS_RG")
     public String rg;
 
+    @NotEmpty(message = "NOME OBRIGATORIO")
     @Column(name = "EST_DS_NOME")
     public String nome;
 

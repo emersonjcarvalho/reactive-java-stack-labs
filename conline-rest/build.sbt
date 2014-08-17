@@ -24,12 +24,18 @@ libraryDependencies ++= Seq(
   //
   "org.apache.commons" % "commons-email" % "1.3.3",
   "com.amazonaws" % "aws-java-sdk" % "1.8.4",
-  "org.springframework" % "spring-context" % "3.2.2.RELEASE",
   "javax.inject" % "javax.inject" % "1",
+  //
+  "org.springframework" % "spring-context" % "3.2.2.RELEASE",
   "org.springframework.data" % "spring-data-jpa" % "1.3.2.RELEASE",
+  //javax.el usado pelo spring-data-jpa
+  "javax.el" % "el-api" % "2.2",
+  //"javax.el" % "el-api" % "1.0"
+  "org.glassfish.web" % "el-impl" % "2.2",
   "org.springframework" % "spring-expression" % "3.2.2.RELEASE",
   //
   "org.hibernate" % "hibernate-entitymanager" % "3.6.10.Final",
+  "org.hibernate" % "hibernate-validator" % "4.2.0.Final",
   //"org.hibernate" % "hibernate-core" % "4.0.1.Final",
   //"org.hibernate" % "hibernate-entitymanager" % "4.2.0.Final",
   "mysql" % "mysql-connector-java" % "5.1.18",

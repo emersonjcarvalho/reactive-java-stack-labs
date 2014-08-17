@@ -8,13 +8,16 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 import models.*;
 import models.repository.*;
 
+import org.hibernate.validator.HibernateValidator;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import play.data.validation.Constraints;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.libs.Json;
 import utils.ConstantUtil;
 import utils.PagamentoUtil;
+import utils.ToolsUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,7 +28,9 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
+import javax.validation.*;
 import javax.xml.bind.DatatypeConverter;
 
 
@@ -42,6 +47,8 @@ public class SolicitacaoController extends Controller{
     private final EstudanteRepository estudanteRepository;
     private final CampusRepository campusRepository;
     private final EstadoRepository estadoRepository;
+
+    public static Validator validator;
 
     @Inject
     public SolicitacaoController(SolicitacaoRepository solicitacaoRepository, EstudanteRepository estudanteRepository, CampusRepository campusRepository, EstadoRepository estadoRepository) {
@@ -66,11 +73,20 @@ public class SolicitacaoController extends Controller{
         SolicitacaoModelo solicitacaoRequest = Json.fromJson(jsonBodyRequest, SolicitacaoModelo.class);
         final EstudanteModelo estudanteRequest = solicitacaoRequest.estudante;
 
-        System.out.println("####################################");
-        System.out.println("estudanteRequest.dataNascimento: " + estudanteRequest.dataNascimento);
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
 
-        //estudante.setNomeArquivoFoto(nomeArquivoFotoVirtual);
-        //estudante.setNomeArquivoDocumento(this.nomeFileDocumento);
+        Set<ConstraintViolation<EstudanteModelo>> constraintViolations = validator.validate(estudanteRequest);
+
+        if(!constraintViolations.isEmpty()){
+                        
+            System.out.println("constraintViolations.size: " + constraintViolations.size());
+
+            return badRequest(Json.toJson(ToolsUtil
+                    .ConstraintViolation2ValidationErrorDTO(constraintViolations)
+                    .getFieldErrors()));
+        }
+
         final EstudanteModelo estudanteSaved = estudanteRepository.save(estudanteRequest);
 
 

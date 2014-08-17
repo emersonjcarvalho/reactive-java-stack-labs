@@ -4,12 +4,17 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import models.EstudanteModelo;
+import models.FieldErrorDTO;
+import models.ValidationErrorDTO;
 
+import javax.validation.ConstraintViolation;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 
 /**
  * Created by w6c on 28/07/2014.
@@ -79,5 +84,17 @@ public class ToolsUtil {
         }
 
         return fileMimeType;
+    }
+
+    public static ValidationErrorDTO ConstraintViolation2ValidationErrorDTO(Set<ConstraintViolation<EstudanteModelo>> constraintViolations){
+
+        ValidationErrorDTO validationErrorDTO = new ValidationErrorDTO();
+
+        for (ConstraintViolation<EstudanteModelo> constraintViolation : constraintViolations){
+
+            validationErrorDTO.addFieldError(constraintViolation.getPropertyPath().toString() ,constraintViolation.getMessage());
+        }
+
+        return validationErrorDTO;
     }
 }
