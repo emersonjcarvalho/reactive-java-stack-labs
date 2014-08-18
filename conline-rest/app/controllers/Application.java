@@ -1,5 +1,7 @@
 package controllers;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import play.cache.Cache;
 import play.libs.Json;
 import play.mvc.*;
@@ -167,5 +169,19 @@ public class Application extends Controller {
             flash("error", "Missing file");
             return redirect(controllers.routes.Application.index());
         }
+    }
+
+    public static Result properties(){
+
+        // "config1" is just an example of using a file other than
+        // application.conf
+        Config config1 = ConfigFactory.load("validations");
+
+        // use the config ourselves
+        System.out.println("config1, complex-app.something="
+                + config1.getString("complex-app.something"));
+
+
+        return ok("config.validations: " + config1.getString("complex-app.something"));
     }
 }

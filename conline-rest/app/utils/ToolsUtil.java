@@ -27,6 +27,8 @@ public class ToolsUtil {
     final static String accessKey = config.getString("accessKey");
     final static String secretKey = config.getString("secretKey");
 
+    //public final static Config configValidations = ConfigFactory.load("validations");
+
     //Cliente autenticado do Serviço Amazon AWS
     public static AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 
@@ -97,4 +99,8 @@ public class ToolsUtil {
 
         return validationErrorDTO;
     }
+
+
+
+
 }

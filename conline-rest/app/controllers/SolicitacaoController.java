@@ -1,5 +1,7 @@
 package controllers;
 
+import actors.mail.EmailNotificacaoMessage;
+import actors.mail.EmailOperacionalMessage;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -12,10 +14,13 @@ import models.repository.*;
 import org.hibernate.validator.HibernateValidator;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import play.cache.Cache;
 import play.data.validation.Constraints;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.libs.Json;
+import services.MailServiceHelper;
+import services.StorageServiceHelper;
 import utils.ConstantUtil;
 import utils.PagamentoUtil;
 import utils.ToolsUtil;
@@ -23,6 +28,7 @@ import utils.ToolsUtil;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -66,13 +72,17 @@ public class SolicitacaoController extends Controller{
         System.out.println(jsonBodyRequest.toString());
         System.out.println("##################################################################");
 
-
+        // Json DataBind $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JodaModule());
         Json.setObjectMapper(mapper);
 
         SolicitacaoModelo solicitacaoRequest = Json.fromJson(jsonBodyRequest, SolicitacaoModelo.class);
         final EstudanteModelo estudanteRequest = solicitacaoRequest.estudante;
+
+        // FIM Json DataBind $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+        // VALIDATE BEAN/POJO $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
@@ -85,35 +95,72 @@ public class SolicitacaoController extends Controller{
 
             ValidationErrorDTO errorDTOAux = ToolsUtil.ConstraintViolation2ValidationErrorDTO(constraintViolations);
 
-            //ObjectNode resultJSON;
-            //JsonNode jNode = mapper.valueToTree(errorDTOAux);
-            //resultJSON = (ObjectNode) jNode;
-
-            //return badRequest(resultJSON);
-
             return badRequest(Json.toJson(ToolsUtil
-                    .ConstraintViolation2ValidationErrorDTO(constraintViolations).getFieldErrors() )) ;
-
+                    .ConstraintViolation2ValidationErrorDTO(constraintViolations) )) ;
         }
 
-        final EstudanteModelo estudanteSaved = estudanteRepository.save(estudanteRequest);
+        // FIM VALIDATE BEAN/POJO $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
+        // VALIDATE FILE UPLOAD W/ SUCCESS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+        if(Cache.get(estudanteRequest.nomeArquivoFoto) == null){
+            ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
+            retornoErrorDTOSolicitacao.addFieldError("nomeArquivoFoto", "Problema ao carregar [Foto]. Tente novamente a solicitação");
+            return badRequest(Json.toJson(retornoErrorDTOSolicitacao));
+
+        }else if(Cache.get(estudanteRequest.nomeArquivoDocumento) == null){
+            ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
+            retornoErrorDTOSolicitacao.addFieldError("nomeArquivoDocumento", "Problema ao carregar {Documento]. Tente novamente a solicitação");
+
+            return badRequest(Json.toJson(retornoErrorDTOSolicitacao));
+        }
+        // FIM VALIDATE FILE UPLOAD W/ SUCCESS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+        //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$    Persist DB  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+        final EstudanteModelo estudanteSaved = estudanteRepository.save(estudanteRequest);
 
         //DEFINICOES SOLICITACAO
         solicitacaoRequest.dataSolicitacao = new DateTime(DateTimeZone.forID("America/Sao_Paulo"));
         solicitacaoRequest.valorCarteira = ConstantUtil.PRECO_CARTEIRINHA;
         solicitacaoRequest.idStatusSolicitacao = ConstantUtil.ID_STATUS_SOL_INICIAL;
         solicitacaoRequest.flagPago = false;
-        solicitacaoRequest.codigoLocalEntrega = estudanteRequest.localEntrega;
+        solicitacaoRequest.codigoLocalEntrega = estudanteRequest.localEntrega.charAt(0);
 
         solicitacaoRequest.estudante = estudanteRequest;
 
         //final Usuario usuarioSaved = usuarioRepository.save(usuarioRequest);
         final SolicitacaoModelo solicitacaoSaved = solicitacaoRepository.save(solicitacaoRequest);
 
+        if(solicitacaoSaved.id == null){
+            ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
+            retornoErrorDTOSolicitacao.addFieldError("action", "Não possivel salvar os dados. Entre em contato com: carteira@dceunifacs.com");
+            //ObjectNode nodeErro = Json.newObject();
+
+            return internalServerError(Json.toJson(retornoErrorDTOSolicitacao));
+        }
+        //FIM Persist DB  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+        //Put AWS S3 ********************************************************
+        StorageServiceHelper storageService = new StorageServiceHelper();
+        storageService.salvarFotoStorage(estudanteSaved.nomeArquivoFoto);
+
+        File attachementFoto = (File) Cache.get(estudanteSaved.nomeArquivoFoto);
+        File attachementDocumento= (File) Cache.get(estudanteSaved.nomeArquivoDocumento);
+
+        //Send MAIL (AWS SES) ********************************************************
+        EmailNotificacaoMessage notificacaoMessage = new EmailNotificacaoMessage(ConstantUtil.SES_ASSUNTO_CONFIRMACAO, "MsgTextBody - ALTERNATIVO", "HTML - MsgHtmlBody", estudanteSaved.email);
+        EmailOperacionalMessage operacionalMessage = new EmailOperacionalMessage(ConstantUtil.SES_EMAIL_TO_OPERACIONAL, "MsgTextBodyOperacional", "MsgHtmlBodyOperacional", attachementFoto, attachementDocumento);
+
+        MailServiceHelper.sendMailOperacional(operacionalMessage);
+        MailServiceHelper.sendMailNotificacao(notificacaoMessage);
+
+        //Autentic PagSeguro and Return URL to Redirect
+
+        String urlPagSeguro = efetuarPagamento(getPagamentoPagSeguroPreenchido(String.valueOf(solicitacaoSaved.id), solicitacaoSaved.estudante));
 
         ObjectNode nodeRedirectPagSeguro = Json.newObject();
-        nodeRedirectPagSeguro.put(ConstantUtil.KEY_URL_SOLICITACAO_SUCESSO,"http://www.nyc.com");
+        nodeRedirectPagSeguro.put(ConstantUtil.KEY_URL_SOLICITACAO_SUCESSO, urlPagSeguro);
 
         return ok(nodeRedirectPagSeguro);
     }
@@ -158,14 +205,14 @@ public class SolicitacaoController extends Controller{
         estudante.estado = estado;
         estudante.cidade = "New York City";
         estudante.bairro = "Queens";
-        estudante.cep = 40353630;
+        estudante.cep = "40353630";
         estudante.logradouro = "2º Revenue Str";
         estudante.numeroEndereco = "915E";
         estudante.complementoEndereco = "asdasdas";
         estudante.nome = "Emerson Carvalho";
         estudante.email = "emerson@startupland.com";
-        estudante.codigo_area_celular = 71;
-        estudante.celular = 88008800;
+        estudante.codigo_area_celular = "71";
+        estudante.celular = "88008800";
 
         Long idSolicitacao = 343L;
 
