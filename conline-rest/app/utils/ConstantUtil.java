@@ -25,6 +25,7 @@ public class ConstantUtil {
     public static final String KEY_MULTIPARTI_FILE_UPLOAD_FOTO = "fotoFile";
     public static final String KEY_MULTIPARTI_FILE_UPLOAD_DOCUMENTO = "documentoFile";
 
+    public static final String KEY_URL_SOLICITACAO_SUCESSO = "urlSolicitacaoSucesso";
 
 
     //#####################################    ########################

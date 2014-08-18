@@ -73,7 +73,7 @@ public class UploadAsyncController extends Controller {
             return ok(Json.toJson(Json.newObject().put("nomeFileDocumentoCache", nomeFileDocumentoCache)));
 
         } else {
-            System.out.println("<<<<<<<< documentoFileUpload - ELSE = (picture != null) >>>>>>>>>>>>>");
+            System.out.println("<<<<<<<< documentoFileUpload - ELSE = (picture == null) >>>>>>>>>>>>>");
 
             //flash("error", "Missing file");
             //return redirect(controllers.routes.Application.index());

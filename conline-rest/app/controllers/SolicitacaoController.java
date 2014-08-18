@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -79,12 +80,20 @@ public class SolicitacaoController extends Controller{
         Set<ConstraintViolation<EstudanteModelo>> constraintViolations = validator.validate(estudanteRequest);
 
         if(!constraintViolations.isEmpty()){
-                        
+
             System.out.println("constraintViolations.size: " + constraintViolations.size());
 
+            ValidationErrorDTO errorDTOAux = ToolsUtil.ConstraintViolation2ValidationErrorDTO(constraintViolations);
+
+            //ObjectNode resultJSON;
+            //JsonNode jNode = mapper.valueToTree(errorDTOAux);
+            //resultJSON = (ObjectNode) jNode;
+
+            //return badRequest(resultJSON);
+
             return badRequest(Json.toJson(ToolsUtil
-                    .ConstraintViolation2ValidationErrorDTO(constraintViolations)
-                    .getFieldErrors()));
+                    .ConstraintViolation2ValidationErrorDTO(constraintViolations).getFieldErrors() )) ;
+
         }
 
         final EstudanteModelo estudanteSaved = estudanteRepository.save(estudanteRequest);
@@ -102,7 +111,11 @@ public class SolicitacaoController extends Controller{
         //final Usuario usuarioSaved = usuarioRepository.save(usuarioRequest);
         final SolicitacaoModelo solicitacaoSaved = solicitacaoRepository.save(solicitacaoRequest);
 
-        return ok(Json.toJson(solicitacaoSaved));
+
+        ObjectNode nodeRedirectPagSeguro = Json.newObject();
+        nodeRedirectPagSeguro.put(ConstantUtil.KEY_URL_SOLICITACAO_SUCESSO,"http://www.nyc.com");
+
+        return ok(nodeRedirectPagSeguro);
     }
 
 
@@ -163,12 +176,10 @@ public class SolicitacaoController extends Controller{
         return ok("urlPagSeguro: " + urlPagSeguro);
     }
 
-
     public static String efetuarPagamento(PagamentoPagSeguro pagamentoPagSeguro) {
         PagamentoUtil pagamentoUtil = new PagamentoUtil();
         return pagamentoUtil.enviaPagamentoPagSeguro(pagamentoPagSeguro);
     }
-
 
     public static PagamentoPagSeguro getPagamentoPagSeguroPreenchido(String idSolicitacao, EstudanteModelo estudante) {
 
