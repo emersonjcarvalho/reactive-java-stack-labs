@@ -41,6 +41,8 @@ GET     /solicitacoes               @controllers.UserController.solicitacoes
 GET     /estudantes                 @controllers.UserController.estudantes
 
 
+GET     /properties                 controllers.Application.properties()
+
 OPTIONS     /users      	        controllers.UserController.option()
 
 
