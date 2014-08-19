@@ -42,6 +42,7 @@ public class UploadAsyncController extends Controller {
             //File file = picture.getFile();
 
             Cache.set(nomeFileFotoCache, picture.getFile());
+            System.out.println("<<<<<<<< fotoFileUpload -  nomeFileFotoCache: " + nomeFileFotoCache);
 
             return ok(Json.toJson(Json.newObject().put("nomeFileFotoCache", nomeFileFotoCache)));
 
@@ -67,7 +68,7 @@ public class UploadAsyncController extends Controller {
             Cache.set(nomeFileDocumentoCache, documento.getFile());
 
             String contentType = documento.getContentType();
-            System.out.println("<<<<<<<< documentoFileUpload -  contentType: " + contentType);
+            System.out.println("<<<<<<<< documentoFileUpload -  nomeFileDocumentoCache: " + nomeFileDocumentoCache);
             System.out.println("<<<<<<<< capturaExtensaoDoMimeType: " + extensao);
 
             return ok(Json.toJson(Json.newObject().put("nomeFileDocumentoCache", nomeFileDocumentoCache)));

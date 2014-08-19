@@ -73,17 +73,24 @@ public class SolicitacaoController extends Controller{
         System.out.println("##################################################################");
 
         // Json DataBind $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Json DataBind ");
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JodaModule());
         Json.setObjectMapper(mapper);
 
         SolicitacaoModelo solicitacaoRequest = Json.fromJson(jsonBodyRequest, SolicitacaoModelo.class);
         final EstudanteModelo estudanteRequest = solicitacaoRequest.estudante;
+        estudanteRequest.idInstituicao = 1L;
+        estudanteRequest.localEntrega = "c";
+
+        System.out.println("FIM Json DataBind <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
         // FIM Json DataBind $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
         // VALIDATE BEAN/POJO $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALIDATE BEAN/POJO ");
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
 
@@ -96,23 +103,33 @@ public class SolicitacaoController extends Controller{
             ValidationErrorDTO errorDTOAux = ToolsUtil.ConstraintViolation2ValidationErrorDTO(constraintViolations);
 
             return badRequest(Json.toJson(ToolsUtil
-                    .ConstraintViolation2ValidationErrorDTO(constraintViolations) )) ;
+                    .ConstraintViolation2ValidationErrorDTO(constraintViolations).getFieldErrors() )) ;
         }
+
+        System.out.println(" VALIDATE BEAN/POJO  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 
         // FIM VALIDATE BEAN/POJO $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
         // VALIDATE FILE UPLOAD W/ SUCCESS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-        if(Cache.get(estudanteRequest.nomeArquivoFoto) == null){
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALIDATE FILE UPLOAD W/ SUCCESS  ");
+        System.out.println("estudanteRequest.nomeArquivoFoto: " + estudanteRequest.nomeArquivoFoto);
+        System.out.println("estudanteRequest.nomeArquivoFoto: " + estudanteRequest.nomeArquivoDocumento);
+
+        File filetFoto = (File) Cache.get(estudanteRequest.nomeArquivoFoto);
+        File fileDocumento= (File) Cache.get(estudanteRequest.nomeArquivoDocumento);
+
+        if(filetFoto.canRead()){
             ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
             retornoErrorDTOSolicitacao.addFieldError("nomeArquivoFoto", "Problema ao carregar [Foto]. Tente novamente a solicitação");
-            return badRequest(Json.toJson(retornoErrorDTOSolicitacao));
+            return badRequest(Json.toJson(retornoErrorDTOSolicitacao.getFieldErrors()));
 
-        }else if(Cache.get(estudanteRequest.nomeArquivoDocumento) == null){
+        }else if(fileDocumento.canRead()){
             ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
             retornoErrorDTOSolicitacao.addFieldError("nomeArquivoDocumento", "Problema ao carregar {Documento]. Tente novamente a solicitação");
 
-            return badRequest(Json.toJson(retornoErrorDTOSolicitacao));
+            return badRequest(Json.toJson(retornoErrorDTOSolicitacao.getFieldErrors()));
         }
+        System.out.println(" FIM VALIDATE FILE UPLOAD W/ SUCCESS  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         // FIM VALIDATE FILE UPLOAD W/ SUCCESS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
@@ -137,7 +154,7 @@ public class SolicitacaoController extends Controller{
             retornoErrorDTOSolicitacao.addFieldError("action", "Não possivel salvar os dados. Entre em contato com: carteira@dceunifacs.com");
             //ObjectNode nodeErro = Json.newObject();
 
-            return internalServerError(Json.toJson(retornoErrorDTOSolicitacao));
+            return internalServerError(Json.toJson(retornoErrorDTOSolicitacao.getFieldErrors()));
         }
         //FIM Persist DB  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -145,12 +162,9 @@ public class SolicitacaoController extends Controller{
         StorageServiceHelper storageService = new StorageServiceHelper();
         storageService.salvarFotoStorage(estudanteSaved.nomeArquivoFoto);
 
-        File attachementFoto = (File) Cache.get(estudanteSaved.nomeArquivoFoto);
-        File attachementDocumento= (File) Cache.get(estudanteSaved.nomeArquivoDocumento);
-
         //Send MAIL (AWS SES) ********************************************************
         EmailNotificacaoMessage notificacaoMessage = new EmailNotificacaoMessage(ConstantUtil.SES_ASSUNTO_CONFIRMACAO, "MsgTextBody - ALTERNATIVO", "HTML - MsgHtmlBody", estudanteSaved.email);
-        EmailOperacionalMessage operacionalMessage = new EmailOperacionalMessage(ConstantUtil.SES_EMAIL_TO_OPERACIONAL, "MsgTextBodyOperacional", "MsgHtmlBodyOperacional", attachementFoto, attachementDocumento);
+        EmailOperacionalMessage operacionalMessage = new EmailOperacionalMessage(ConstantUtil.SES_EMAIL_TO_OPERACIONAL, "MsgTextBodyOperacional", "MsgHtmlBodyOperacional", filetFoto, fileDocumento);
 
         MailServiceHelper.sendMailOperacional(operacionalMessage);
         MailServiceHelper.sendMailNotificacao(notificacaoMessage);
@@ -225,7 +239,18 @@ public class SolicitacaoController extends Controller{
 
     public static String efetuarPagamento(PagamentoPagSeguro pagamentoPagSeguro) {
         PagamentoUtil pagamentoUtil = new PagamentoUtil();
-        return pagamentoUtil.enviaPagamentoPagSeguro(pagamentoPagSeguro);
+
+        String urlRetorno = null;
+
+        urlRetorno = pagamentoUtil.enviaPagamentoPagSeguro(pagamentoPagSeguro);
+
+        if(urlRetorno == null){
+            urlRetorno = ConstantUtil.URL_MENSAGEM_PROBLEMA_GATEWAY_PAGAMENTO;
+        }else if(urlRetorno.isEmpty()){
+            urlRetorno = ConstantUtil.URL_MENSAGEM_PROBLEMA_GATEWAY_PAGAMENTO;
+        }
+
+        return urlRetorno;
     }
 
     public static PagamentoPagSeguro getPagamentoPagSeguroPreenchido(String idSolicitacao, EstudanteModelo estudante) {
