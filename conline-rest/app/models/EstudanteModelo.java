@@ -46,18 +46,19 @@ public class EstudanteModelo {//implements Serializable {
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     //@Pattern(regexp = "^$|[0-9]", message = ValidationsMessages.MSG_ONLY_NUMBER)
     @CPF(message = ValidationsMessages.MSG_CPF_INVALIDO)
-    @Column(name = "EST_DS_CPF", unique = true, length = 11)
+    @Column(name = "EST_DS_CPF", length = 11) //unique = true,
     public String cpf;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     //@Pattern(regexp = "(^$|[0-9])", message = ValidationsMessages.MSG_ONLY_NUMBER)
     @Size(max = 15, message = "Deve conter no máximo {max} digitos")
     @Digits(fraction = 0, integer = 15, message = ValidationsMessages.MSG_ONLY_NUMBER)
-    @Column(name = "EST_DS_RG")
+    @Column(name = "EST_DS_RG", length = 15)
     public String rg;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_NOME")
+    @Size(max = 100, message = "Deve conter no máximo {max} digitos")
+    @Column(name = "EST_DS_NOME", length = 100)
     public String nome;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
@@ -87,31 +88,32 @@ public class EstudanteModelo {//implements Serializable {
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     @Email(message = ValidationsMessages.MSG_EMAIL_INVALIDO)
-    @Column(name = "EST_DS_EMAIL")
+    @Size(max = 100, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_EMAIL", length = 100)
     public String email;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     @Size(min = 2, max = 2, message = "Deve conter {min} digitos")
     @Digits(fraction = 0, integer = 2, message = ValidationsMessages.MSG_ONLY_NUMBER)
-    @Column(name = "EST_NU_CODIGO_AREA_TELEFONE")
+    @Column(name = "EST_NU_CODIGO_AREA_TELEFONE", length = 2)
     public String codigo_area_telefone;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     @Size(min = 8, max = 10, message = "Deve conter entre {min} a {max} digitos")
     @Digits(fraction = 0, integer = 10, message = ValidationsMessages.MSG_ONLY_NUMBER)
-    @Column(name = "EST_NU_TELEFONE")
+    @Column(name = "EST_NU_TELEFONE", length = 10)
     public String telefone;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     @Size(min = 2, max = 2, message = "Deve conter {min} digitos")
     @Digits(fraction = 0, integer = 2, message = ValidationsMessages.MSG_ONLY_NUMBER)
-    @Column(name = "EST_NU_CODIGO_AREA_CELULAR")
+    @Column(name = "EST_NU_CODIGO_AREA_CELULAR", length = 2)
     public String codigo_area_celular;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     @Size(min = 8, max = 10, message = "Deve conter entre {min} a {max} digitos")
     @Digits(fraction = 0, integer = 10, message = ValidationsMessages.MSG_ONLY_NUMBER)
-    @Column(name = "EST_NU_CELULAR")
+    @Column(name = "EST_NU_CELULAR", length = 10)
     public String celular;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
@@ -121,23 +123,28 @@ public class EstudanteModelo {//implements Serializable {
     public String cep;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_LOGRADOURO")
+    @Size(max = 150, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_LOGRADOURO", length = 150)
     public String logradouro;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_NU_ENDERECO")
+    @Size(max = 10, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_NU_ENDERECO", length = 10)
     public String numeroEndereco;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_COMPLEMENTO_ENDERECO")
+    @Size(max = 50, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_COMPLEMENTO_ENDERECO", length = 50)
     public String complementoEndereco;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_BAIRRO")
+    @Size(max = 30, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_BAIRRO", length = 30)
     public String bairro;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_CIDADE")
+    @Size(max = 70, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_CIDADE", length = 70)
     public String cidade;
 
     @NotNull(message =  ValidationsMessages.MSG_NOT_EMPTY)
@@ -155,7 +162,8 @@ public class EstudanteModelo {//implements Serializable {
     public Campus campus;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_CURSO", length = 70)
+    @Size(max = 50, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_CURSO", length = 50)
     public String curso;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
@@ -165,7 +173,7 @@ public class EstudanteModelo {//implements Serializable {
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     @Size(max = 10, message = "Deve conter no máximo {max} digitos")
-    @Column(name = "EST_DS_MATRICULA")
+    @Column(name = "EST_DS_MATRICULA", length = 10)
     public String matricula;
 
     //@NotNull(message =  ValidationsMessages.MSG_NOT_EMPTY)
@@ -177,11 +185,13 @@ public class EstudanteModelo {//implements Serializable {
     //public Set<SolicitacaoModelo> listaSolicitacao = new HashSet<SolicitacaoModelo>(0);
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_NOME_ARQ_FOTO")
+    @Size(max = 50, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_NOME_ARQ_FOTO", length = 50)
     public String nomeArquivoFoto;
 
     @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
-    @Column(name = "EST_DS_NOME_ARQ_DOCUMENTO")
+    @Size(max = 50, message = "Deve conter no maximo {max} digitos")
+    @Column(name = "EST_DS_NOME_ARQ_DOCUMENTO",length = 50)
     public String nomeArquivoDocumento;
 
 }

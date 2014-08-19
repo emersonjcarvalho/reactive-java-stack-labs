@@ -42,5 +42,7 @@ public class ConstantUtil {
     public static final long ID_FORMA_PAGAMENTO = 1; //PAGSEGURO
 
 
+    public static final String URL_MENSAGEM_PROBLEMA_GATEWAY_PAGAMENTO = "http://www.carteirinhaonline.com.br/pag-gateway-error.html";
+
 
 }
