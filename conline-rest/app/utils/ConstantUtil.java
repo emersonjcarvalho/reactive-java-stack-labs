@@ -1,5 +1,7 @@
 package utils;
 
+import models.EstudanteModelo;
+
 /**
  * Created by w6c on 27/07/2014.
  */
@@ -44,5 +46,62 @@ public class ConstantUtil {
 
     public static final String URL_MENSAGEM_PROBLEMA_GATEWAY_PAGAMENTO = "http://www.carteirinhaonline.com.br/pag-gateway-error.html";
 
+    public static String getHtmlMsgConfirmacao(EstudanteModelo estudante) {
+        String htmlMsg = "<HTML><BODY>"
+                + "<H2> Solicitacao de Carteira de Estudante DCE UNIFACS </H2><BR><BR>"
+                + "<p>Prezado(a) " + "<b>" + estudante.nome.toUpperCase() + "!</b>"
+                + "Seus dados e documentos entrarão em processo de validação."
+                + "<br>"
+                + "Após a confirmação de pagamento do PagSeguro enviaremos para o processo de emissão."
+                + "<br>"
+                + "Fique atento pois toda a nossa cominunicação será através do email que você cadastrado."
+                + "<br> <br>"
+                + "Qualquer dúvida favor entrar em contato conosco"
+                + "<br> <br>"
+                + "Atenciosamente,"
+                + "<br>"
+                + "Equipe DCE UNIFACS"
+                + "</BODY></HTML>";
+
+        return htmlMsg;
+    }
+
+
+    public static String getHtmlMsgOperacional(EstudanteModelo estudante) {
+
+        String htmlMsg = "<HTML><BODY>"
+                + "<H2> SOLICITACAO DE CARTEIRINHA </H2><BR><BR>"
+                + "<b>Nome: </b>" + estudante.nome + "<br>"
+                + "<b>Email: </b>" + estudante.email + "<br>"
+                + "<b>CPF: </b>" + estudante.cpf + "<br>"
+                + "<b>RG: </b>" + estudante.cpf + "<br>"
+                + "<b>Data Nascimento: </b>" + estudante.dataNascimento.toLocalDate().toString("dd/MM/yyyy") + "<br>"
+                + "<b>Telefone: </b>" + "(" + estudante.codigo_area_telefone + ")" + estudante.telefone + "<br>"
+                + "<b>Celular: </b>" + "(" + estudante.codigo_area_celular + ")" +  estudante.celular + "<br>"
+                + "<br>"
+                + "<b>Matricula: </b>" + estudante.matricula + "<br>"
+                + "<b>Instituição: </b>" + estudante.idInstituicao + "<br>"
+                + "<b>Curso: </b>" + estudante.curso + "<br>"
+                //+ "<b>Tipo Periodo: </b>" + estudante.getTipoPeriodo() + "<br>"
+                //+ "<b>Periodo: </b>" + estudante.getPeriodo() + "<br>"
+                + "<br>"
+                + "<b>Estado: </b>" + estudante.estado.descricao + "<br>"
+                + "<b>Ciadde: </b>" + estudante.cidade + "<br>"
+                + "<b>Endereço: </b>" + estudante.logradouro + "<br>"
+                + "<b>Complemento: </b>" + estudante.complementoEndereco + "<br>"
+                + "<b>Numero: </b>" + estudante.numeroEndereco + "<br>"
+                + "<b>Bairro: </b>" + estudante.bairro + "<br>"
+                + "<b>CEP: </b>" + estudante.cep + "<br>"
+                //+ "<b>OK CONTRATO: </b>" + estudante.getOkContrato().toString() + "<br>"
+                //+ "<b>FORMA PAGAMENTO: </b>" + estudante.getFormaPagamento() + "<br>"
+                + "<b>LOCAL RETIRADA: </b>" + estudante.localEntrega.toString() + "<br>"
+                + "<br>"
+                //+ "<b>FOTO 3X4: </b>" + SERVER + estudante.getPath_fileFoto() + "<br>"
+                //+ "<b>DOCUMENTO: </b>" + SERVER + estudante.getPath_fileDocumento() + "<br>"
+                //+ "<b>COMP MATRICULA: </b>" + SERVER +  estudante.getPath_fileCompMatricula() + "<br>"
+                + "</BODY></HTML>";
+
+        return htmlMsg;
+    }
 
 }

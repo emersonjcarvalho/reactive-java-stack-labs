@@ -105,32 +105,40 @@ public class ToolsUtil {
     }
 
 
-
-    public  salvarFotoStorage(String nomeFileFotoCache){
+    public static File getCacheWriteDisk(String nomeFileCache){
 
         //PEGA FIle do ehCache
-        File oldFile = (File) Cache.get(nomeFileFotoCache);
+        File fileInCache = (File) Cache.get(nomeFileCache);
+
+        System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - START: ");
+
+        if(fileInCache.getName() == nomeFileCache && fileInCache.canRead()){
+
+            System.out.println();
+            System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - nomeFileCache:  " + nomeFileCache);
+            System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - fileInCache.getName:  " + fileInCache.getName());
+
+            return fileInCache;
+        }
 
         //Cria NOVO nome no mesmo diretorio do arquivo do Cache(MultiParti recebido pelo Play no controller)
-        String newPath = oldFile.getParent() + "\\" + nomeFileFotoCache;
+        String newPath = fileInCache.getParent() + "\\" + nomeFileCache;
 
-        File newFileToS3 = new File(newPath);
+        File newFileToInDiks = new File(newPath);
 
         //CRIA arquivo com NOVO Nome.. O antigo é automativamente excluido pelo java.io.File
-        if(oldFile.renameTo(newFileToS3)){
-            S3FileObject s3FileObject = new S3FileObject(ConstantUtil.BUCKET_NAME, ConstantUtil.DIRETORIO_FOTOS, nomeFileFotoCache, newFileToS3);
+        if(fileInCache.renameTo(newFileToInDiks)){
 
-            //Envia mensagem p/ Supervidor do Actor
-            actorRefSupervisor.tell(s3FileObject, ActorRef.noSender());
+            return newFileToInDiks;
 
             //#CLEAN-RESOURCE: Limpa arquivo do ehCache
-            Cache.remove(nomeFileFotoCache);
-
+            //Cache.remove(nomeFileFotoCache);
         }else{
-            System.out.println("StorageServiceHelper - salvarFotoStorage - fileToS3.renameTo: FALHOU");
+            System.out.println("ToolsUtil - getCacheWriteDisk: FALHOU");
+
+            return null;
         }
     }
-
 
 
 }
