@@ -286,6 +286,22 @@ public class SolicitacaoController extends Controller{
     }
 
 
+    public static Result getCacheWriteDiskFOTO(String nomeFileCache){
+
+        File filetFoto = ToolsUtil.getCacheWriteDisk(nomeFileCache);
+
+        if(filetFoto == null) {
+            return badRequest("filetFoto == null");
+        }
+
+        if(!filetFoto.canRead()) {
+            return badRequest("!filetFoto.canRead()");
+        }
+
+        return ok("filetFoto.getName " + filetFoto.getName());
+    }
+
+
     // ########################################################################################################
     // ############################################## ENABLE CORS #############################################
     private static Result allowCORS() {

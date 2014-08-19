@@ -110,7 +110,11 @@ public class ToolsUtil {
         //PEGA FIle do ehCache
         File fileInCache = (File) Cache.get(nomeFileCache);
 
-        System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - START: ");
+        System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - START: " + nomeFileCache);
+
+        System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - nomeFileCache:  " + nomeFileCache);
+        System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - fileInCache.getName:  " + fileInCache.getName());
+        System.out.println();
 
         if(fileInCache.getName() == nomeFileCache && fileInCache.canRead()){
 
@@ -124,10 +128,17 @@ public class ToolsUtil {
         //Cria NOVO nome no mesmo diretorio do arquivo do Cache(MultiParti recebido pelo Play no controller)
         String newPath = fileInCache.getParent() + "\\" + nomeFileCache;
 
+        System.out.println("newPath: " + newPath);
+
         File newFileToInDiks = new File(newPath);
+
+        System.out.println("newFileToInDiks: " + newFileToInDiks.getName());
+        System.out.println("newFileToInDiks.canRead: " + newFileToInDiks.canRead());
 
         //CRIA arquivo com NOVO Nome.. O antigo é automativamente excluido pelo java.io.File
         if(fileInCache.renameTo(newFileToInDiks)){
+
+            System.out.println("fileInCache.renameTo(newFileToInDiks)");
 
             return newFileToInDiks;
 
@@ -139,6 +150,5 @@ public class ToolsUtil {
             return null;
         }
     }
-
 
 }

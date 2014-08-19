@@ -40,6 +40,7 @@ PUT     /users/:id                  @controllers.UserController.updateUser(id: L
 GET     /solicitacoes               @controllers.UserController.solicitacoes
 GET     /estudantes                 @controllers.UserController.estudantes
 
+GET     /cache2Disk/:name           controllers.SolicitacaoController.getCacheWriteDiskFOTO(name: String)
 
 GET     /properties                 controllers.Application.properties()
 
