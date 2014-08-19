@@ -7,6 +7,7 @@ import akka.actor.Props;
 import play.cache.Cache;
 import play.libs.Akka;
 import utils.ConstantUtil;
+import utils.ToolsUtil;
 
 import java.io.File;
 
@@ -20,17 +21,12 @@ public class StorageServiceHelper {
 
     public void salvarFotoStorage(String nomeFileFotoCache){
 
-        //PEGA FIle do ehCache
-        File oldFile = (File) Cache.get(nomeFileFotoCache);
-
-        //Cria NOVO nome no mesmo diretorio do arquivo do Cache(MultiParti recebido pelo Play no controller)
-        String newPath = oldFile.getParent() + "\\" + nomeFileFotoCache;
-
-        File newFileToS3 = new File(newPath);
+        File fileToS3 = ToolsUtil.getCacheWriteDisk(nomeFileFotoCache); //new File(newPath);
 
         //CRIA arquivo com NOVO Nome.. O antigo é automativamente excluido pelo java.io.File
-        if(oldFile.renameTo(newFileToS3)){
-            S3FileObject s3FileObject = new S3FileObject(ConstantUtil.BUCKET_NAME, ConstantUtil.DIRETORIO_FOTOS, nomeFileFotoCache, newFileToS3);
+        if(fileToS3.canRead()){
+
+            S3FileObject s3FileObject = new S3FileObject(ConstantUtil.BUCKET_NAME, ConstantUtil.DIRETORIO_FOTOS, nomeFileFotoCache, fileToS3);
 
             //Envia mensagem p/ Supervidor do Actor
             actorRefSupervisor.tell(s3FileObject, ActorRef.noSender());
@@ -43,15 +39,23 @@ public class StorageServiceHelper {
         }
     }
 
+    public void salvarDocumentoStorage(String nomeFileDocumentoCache){
 
-    public void putObjectS3(S3FileObject s3FileObject){
+        File fileToS3 = ToolsUtil.getCacheWriteDisk(nomeFileDocumentoCache); //new File(newPath);
 
-        actorRefSupervisor.tell(s3FileObject, ActorRef.noSender());
-    }
+        //CRIA arquivo com NOVO Nome.. O antigo é automativamente excluido pelo java.io.File
+        if(fileToS3.canRead()){
 
+            S3FileObject s3FileObject = new S3FileObject(ConstantUtil.BUCKET_NAME, ConstantUtil.DIRETORIO_FOTOS, nomeFileDocumentoCache, fileToS3);
 
-    public void getObjectS3(S3FileObject s3FileObject){
-        //
+            //Envia mensagem p/ Supervidor do Actor
+            actorRefSupervisor.tell(s3FileObject, ActorRef.noSender());
 
+            //#CLEAN-RESOURCE: Limpa arquivo do ehCache
+            Cache.remove(nomeFileDocumentoCache);
+
+        }else{
+            System.out.println("StorageServiceHelper - salvarFotoStorage - fileToS3.renameTo: FALHOU");
+        }
     }
 }

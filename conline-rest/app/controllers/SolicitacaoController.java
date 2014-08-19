@@ -80,7 +80,7 @@ public class SolicitacaoController extends Controller{
         Json.setObjectMapper(mapper);
 
         SolicitacaoModelo solicitacaoRequest = Json.fromJson(jsonBodyRequest, SolicitacaoModelo.class);
-        final EstudanteModelo estudanteRequest = solicitacaoRequest.estudante;
+        EstudanteModelo estudanteRequest = solicitacaoRequest.estudante;
         estudanteRequest.idInstituicao = 1L;
         estudanteRequest.localEntrega = "c";
 
@@ -115,8 +115,9 @@ public class SolicitacaoController extends Controller{
         System.out.println("estudanteRequest.nomeArquivoFoto: " + estudanteRequest.nomeArquivoFoto);
         System.out.println("estudanteRequest.nomeArquivoFoto: " + estudanteRequest.nomeArquivoDocumento);
 
-        File filetFoto = (File) Cache.get(estudanteRequest.nomeArquivoFoto);
-        File fileDocumento= (File) Cache.get(estudanteRequest.nomeArquivoDocumento);
+        //File filetFoto = (File) Cache.get(estudanteRequest.nomeArquivoFoto);
+        File filetFoto = ToolsUtil.getCacheWriteDisk(estudanteRequest.nomeArquivoFoto);
+        File fileDocumento = ToolsUtil.getCacheWriteDisk(estudanteRequest.nomeArquivoDocumento);
 
         if(filetFoto.canRead()){
             ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
