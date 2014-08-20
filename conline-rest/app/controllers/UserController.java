@@ -181,4 +181,25 @@ public class UserController extends Controller{
     public static Result optionID(Long id) {
         return allowCORS();
     }
+
+
+/*
+
+  ### TESTS SPRING-DATA-JPA
+GET     /hello                      @controllers.UserController.hello
+
+GET     /users                      @controllers.UserController.getAllUsers
+GET     /users/:id                  @controllers.UserController.getUserById(id: Long)
+POST    /users                      @controllers.UserController.saveUser
+PUT     /users/:id                  @controllers.UserController.updateUser(id: Long)
+
+GET     /solicitacoes               @controllers.UserController.solicitacoes
+GET     /estudantes                 @controllers.UserController.estudantes
+
+OPTIONS     /users      	        controllers.UserController.option()
+
+
+
+*/
+
 }

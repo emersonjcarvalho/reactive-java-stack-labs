@@ -20,9 +20,10 @@ import java.util.logging.Logger;
 
 public class PagamentoUtil {
 
-    private static final String EMAIL_LOGIN = "carteirinhaonline@gmail.com"; //EMAIL_LOGIN = "emersonjcarvalho@gmail.com";
-    private static final String PRODUCTION_TOKEN = "169913918955481AA8A4C2FA61546C2F";
-    private static final String SANDBOX_TOKEN = "EE88CB41C6EB4E8984957D5E3A9E846F";
+    //private static final String EMAIL_LOGIN = "carteirinhaonline@gmail.com"; //EMAIL_LOGIN = "emersonjcarvalho@gmail.com";
+    private static final String EMAIL_LOGIN = ToolsUtil.config.getString("EMAIL_LOGIN");
+    private static final String PRODUCTION_TOKEN = ToolsUtil.config.getString("PRODUCTION_TOKEN");
+    private static final String SANDBOX_TOKEN = ToolsUtil.config.getString("SANDBOX_TOKEN");
 
     private static final String  URL_PAGSEGURO_PAY_SERVICE_SANDBOX = "https://ws.sandbox.pagseguro.uol.com.br/v2/checkout";
     private static final String  URL_PAGSEGURO_PAY_SERVICE_PRODUCTION = "https://ws.pagseguro.uol.com.br/v2/checkout";
@@ -37,7 +38,8 @@ public class PagamentoUtil {
         String paymentURL = null;
 
         try {
-            pagSeguroCredentials = new AccountCredentials(EMAIL_LOGIN, PRODUCTION_TOKEN, SANDBOX_TOKEN);
+            pagSeguroCredentials = new AccountCredentials(EMAIL_LOGIN, PRODUCTION_TOKEN);
+            //pagSeguroCredentials = new AccountCredentials(EMAIL_LOGIN, PRODUCTION_TOKEN, SANDBOX_TOKEN);
         } catch (PagSeguroServiceException e) {
             e.printStackTrace();
         }

@@ -184,4 +184,22 @@ public class Application extends Controller {
 
         return ok("config.validations: " + config1.getString("complex-app.something"));
     }
+
+/*
+ ###########
+GET         /cache/:key             controllers.Application.getCache(key: String)
+GET         /cache/apaga/:key       controllers.Application.apagaCache(key: String)
+POST        /upload/:cpf            controllers.Application.uploadFoto(cpf: String)
+OPTIONS     /upload      	        controllers.Application.option()
+OPTIONS     /upload/:id  			controllers.Application.optionID(id: Long)
+###################################################################################
+
+GET         /s3/:cpf                controllers.Application.s3(cpf: String)
+
+### TESTS Send-Mail (SES)
+GET         /ses/:to                @controllers.Application.ses(to: String)
+
+GET     /properties                 controllers.Application.properties()
+
+  */
 }

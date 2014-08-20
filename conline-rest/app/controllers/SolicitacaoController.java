@@ -81,7 +81,7 @@ public class SolicitacaoController extends Controller{
 
         SolicitacaoModelo solicitacaoRequest = Json.fromJson(jsonBodyRequest, SolicitacaoModelo.class);
         EstudanteModelo estudanteRequest = solicitacaoRequest.estudante;
-        estudanteRequest.idInstituicao = 1L;
+        estudanteRequest.idInstituicao = ConstantUtil.ID_INSTITUICAO;
         estudanteRequest.localEntrega = "c";
 
         System.out.println("FIM Json DataBind <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
@@ -175,7 +175,9 @@ public class SolicitacaoController extends Controller{
 
         //Send MAIL (AWS SES) ********************************************************
         EmailNotificacaoMessage notificacaoMessage = new EmailNotificacaoMessage(ConstantUtil.SES_ASSUNTO_CONFIRMACAO, "ERROR: Conteudo HTML nao Carregado", ConstantUtil.getHtmlMsgConfirmacao(estudanteSaved), estudanteSaved.email);
-        EmailOperacionalMessage operacionalMessage = new EmailOperacionalMessage(ConstantUtil.SES_EMAIL_TO_OPERACIONAL, "ERROR: Conteudo HTML nao Carregado", ConstantUtil.getHtmlMsgOperacional(estudanteSaved), filetFoto, fileDocumento);
+
+        String SUBJECT_OPERACIONAL = estudanteSaved.matricula + " - " + estudanteSaved.nome;
+        EmailOperacionalMessage operacionalMessage = new EmailOperacionalMessage(SUBJECT_OPERACIONAL, "ERROR: Conteudo HTML nao Carregado", ConstantUtil.getHtmlMsgOperacional(estudanteSaved), filetFoto, fileDocumento);
 
         MailServiceHelper.sendMailOperacional(operacionalMessage);
         MailServiceHelper.sendMailNotificacao(notificacaoMessage);
@@ -265,10 +267,6 @@ public class SolicitacaoController extends Controller{
     }
 
     public static PagamentoPagSeguro getPagamentoPagSeguroPreenchido(String idSolicitacao, EstudanteModelo estudante) {
-
-        //Estado estadoAux = new Estado();
-        //estadoAux.setSigla(estudante.getEstado());
-        //estadoAux = getEstadoByExample(estadoAux);
 
         PagamentoPagSeguro pagamentoPagSeguro = new PagamentoPagSeguro();
 
