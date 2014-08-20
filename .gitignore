@@ -25,3 +25,4 @@ application.conf
 /application.conf
 conf/application.conf
 /conf/application.conf
+conline-rest/conf/application.conf
