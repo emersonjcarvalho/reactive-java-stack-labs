@@ -21,4 +21,7 @@ test-result
 server.pid
 *.eml
 .cache
+application.conf
 /application.conf
+conf/application.conf
+/conf/application.conf
