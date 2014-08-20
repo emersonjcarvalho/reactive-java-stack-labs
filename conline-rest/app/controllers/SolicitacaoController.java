@@ -119,12 +119,22 @@ public class SolicitacaoController extends Controller{
         File filetFoto = ToolsUtil.getCacheWriteDisk(estudanteRequest.nomeArquivoFoto);
         File fileDocumento = ToolsUtil.getCacheWriteDisk(estudanteRequest.nomeArquivoDocumento);
 
-        if(filetFoto.canRead()){
+        if(filetFoto == null){
+            ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
+            retornoErrorDTOSolicitacao.addFieldError("nomeArquivoFoto", "Problema ao carregar [Foto]. Tente novamente a solicitação");
+            return badRequest(Json.toJson(retornoErrorDTOSolicitacao.getFieldErrors()));
+        }else if(fileDocumento == null){
+            ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
+            retornoErrorDTOSolicitacao.addFieldError("nomeArquivoDocumento", "Problema ao carregar {Documento]. Tente novamente a solicitação");
+            return badRequest(Json.toJson(retornoErrorDTOSolicitacao.getFieldErrors()));
+        }
+
+        if(!filetFoto.canRead()){
             ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
             retornoErrorDTOSolicitacao.addFieldError("nomeArquivoFoto", "Problema ao carregar [Foto]. Tente novamente a solicitação");
             return badRequest(Json.toJson(retornoErrorDTOSolicitacao.getFieldErrors()));
 
-        }else if(fileDocumento.canRead()){
+        }else if(!fileDocumento.canRead()){
             ValidationErrorDTO retornoErrorDTOSolicitacao = new ValidationErrorDTO();
             retornoErrorDTOSolicitacao.addFieldError("nomeArquivoDocumento", "Problema ao carregar {Documento]. Tente novamente a solicitação");
 
@@ -164,8 +174,8 @@ public class SolicitacaoController extends Controller{
         storageService.salvarFotoStorage(estudanteSaved.nomeArquivoFoto);
 
         //Send MAIL (AWS SES) ********************************************************
-        EmailNotificacaoMessage notificacaoMessage = new EmailNotificacaoMessage(ConstantUtil.SES_ASSUNTO_CONFIRMACAO, "MsgTextBody - ALTERNATIVO", "HTML - MsgHtmlBody", estudanteSaved.email);
-        EmailOperacionalMessage operacionalMessage = new EmailOperacionalMessage(ConstantUtil.SES_EMAIL_TO_OPERACIONAL, "MsgTextBodyOperacional", "MsgHtmlBodyOperacional", filetFoto, fileDocumento);
+        EmailNotificacaoMessage notificacaoMessage = new EmailNotificacaoMessage(ConstantUtil.SES_ASSUNTO_CONFIRMACAO, "ERROR: Conteudo HTML nao Carregado", ConstantUtil.getHtmlMsgConfirmacao(estudanteSaved), estudanteSaved.email);
+        EmailOperacionalMessage operacionalMessage = new EmailOperacionalMessage(ConstantUtil.SES_EMAIL_TO_OPERACIONAL, "ERROR: Conteudo HTML nao Carregado", ConstantUtil.getHtmlMsgOperacional(estudanteSaved), filetFoto, fileDocumento);
 
         MailServiceHelper.sendMailOperacional(operacionalMessage);
         MailServiceHelper.sendMailNotificacao(notificacaoMessage);

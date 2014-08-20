@@ -18,8 +18,7 @@ public class ConstantUtil {
     public static final String SES_ASSUNTO_CONFIRMACAO = "Solicitação de Carteirinha de Estudante DCE UNIFACS";
     //
     public static final String BUCKET_NAME = "elasticbeanstalk-sa-east-1-172718621343"; //"elasticbeanstalk-us-east-1-503252033224";
-    //public static final String DIRETORIO_FOTOS = "deposito/appCarteirinha/unifacs/fotos/"; //"/deposito/appCarteirinha/unifacs/fotos"
-    public static final String DIRETORIO_FOTOS = "deposito/";
+    public static final String DIRETORIO_FOTOS = "deposito/appCarteirinha/unifacs/fotos/";
     public static final String DIRETORIO_DOCUMENTOS = "deposito/appCarteirinha/unifacs/documentos/";
     //
     public static final String PREFIX_FOTO = "foto_";

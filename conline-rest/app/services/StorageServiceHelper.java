@@ -10,6 +10,7 @@ import utils.ConstantUtil;
 import utils.ToolsUtil;
 
 import java.io.File;
+import java.util.Date;
 
 /**
  * Created by w6c on 30/07/2014.
@@ -21,7 +22,8 @@ public class StorageServiceHelper {
 
     public void salvarFotoStorage(String nomeFileFotoCache){
 
-        File fileToS3 = ToolsUtil.getCacheWriteDisk(nomeFileFotoCache); //new File(newPath);
+        //File fileToS3 = ToolsUtil.getCacheWriteDisk(nomeFileFotoCache);
+        File fileToS3 = (File) Cache.get(nomeFileFotoCache);
 
         //CRIA arquivo com NOVO Nome.. O antigo é automativamente excluido pelo java.io.File
         if(fileToS3.canRead()){
@@ -32,16 +34,20 @@ public class StorageServiceHelper {
             actorRefSupervisor.tell(s3FileObject, ActorRef.noSender());
 
             //#CLEAN-RESOURCE: Limpa arquivo do ehCache
-            Cache.remove(nomeFileFotoCache);
+            //Cache.remove(nomeFileFotoCache);
 
         }else{
+            System.out.println("***************************************************************************************");
             System.out.println("StorageServiceHelper - salvarFotoStorage - fileToS3.renameTo: FALHOU");
+            System.out.println("nomeFileFotoCache: " + nomeFileFotoCache + " - " + new Date());
+            System.out.println("***************************************************************************************");
         }
     }
 
     public void salvarDocumentoStorage(String nomeFileDocumentoCache){
 
-        File fileToS3 = ToolsUtil.getCacheWriteDisk(nomeFileDocumentoCache); //new File(newPath);
+        //File fileToS3 = ToolsUtil.getCacheWriteDisk(nomeFileDocumentoCache);
+        File fileToS3 = (File) Cache.get(nomeFileDocumentoCache);
 
         //CRIA arquivo com NOVO Nome.. O antigo é automativamente excluido pelo java.io.File
         if(fileToS3.canRead()){
@@ -52,10 +58,13 @@ public class StorageServiceHelper {
             actorRefSupervisor.tell(s3FileObject, ActorRef.noSender());
 
             //#CLEAN-RESOURCE: Limpa arquivo do ehCache
-            Cache.remove(nomeFileDocumentoCache);
+            //Cache.remove(nomeFileDocumentoCache);
 
         }else{
-            System.out.println("StorageServiceHelper - salvarFotoStorage - fileToS3.renameTo: FALHOU");
+            System.out.println("***************************************************************************************");
+            System.out.println("StorageServiceHelper - salvarDocumentoStorage - fileToS3.renameTo: FALHOU");
+            System.out.println("nomeFileDocumentoCache: " + nomeFileDocumentoCache + " - " + new Date());
+            System.out.println("***************************************************************************************");
         }
     }
 }

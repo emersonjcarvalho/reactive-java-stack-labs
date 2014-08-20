@@ -48,7 +48,7 @@ public class S3AWSWorker extends UntypedActor{
                     System.out.println("$$$$$$$$$$ S3AWSWorker - isDone [" + new Date() + "] $$$$$$$$$$");
 
                     //#CLEAN-RESOURCE: Apaga arquivo da pasta temporaria do sistema de arquivo
-                    s3FileObject.getFile().delete();
+                    //s3FileObject.getFile().delete();
                 }
 
             } catch (AmazonServiceException ase) {

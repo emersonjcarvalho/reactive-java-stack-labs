@@ -106,28 +106,72 @@ public class ToolsUtil {
 
 
     public static File getCacheWriteDisk(String nomeFileCache){
+        System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - START: ");
 
         //PEGA FIle do ehCache
         File fileInCache = (File) Cache.get(nomeFileCache);
 
-        System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - START: ");
-
-        if(fileInCache.getName() == nomeFileCache && fileInCache.canRead()){
-
-            System.out.println();
-            System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - nomeFileCache:  " + nomeFileCache);
-            System.out.println("(((((((((   ToolsUtil - getCacheWriteDisk - fileInCache.getName:  " + fileInCache.getName());
-
-            return fileInCache;
+        if(fileInCache == null){
+            System.out.println("fileInCache == null");
+            return null;
         }
 
         //Cria NOVO nome no mesmo diretorio do arquivo do Cache(MultiParti recebido pelo Play no controller)
         String newPath = fileInCache.getParent() + "\\" + nomeFileCache;
-
         File newFileToInDiks = new File(newPath);
+
+        if(newFileToInDiks.exists()){
+
+            if(newFileToInDiks.canRead()){
+                return newFileToInDiks;
+            }else{
+                newFileToInDiks.delete();
+            }
+        }
+
+        System.out.println("((((((((( >> nomeFileCache:  " + nomeFileCache);
+        System.out.println("((((((((( >> fileInCache.getName:  " + fileInCache.getName());
+        System.out.println("((((((((( >> fileInCache.getAbsolutePath:  " + fileInCache.getAbsolutePath());
+
+
+        System.out.println("newFileToInDiks.getName: " + newFileToInDiks.getName());
+        System.out.println("newFileToInDiks.getAbsolutePath: " + newFileToInDiks.getAbsolutePath());
 
         //CRIA arquivo com NOVO Nome.. O antigo é automativamente excluido pelo java.io.File
         if(fileInCache.renameTo(newFileToInDiks)){
+
+            System.out.println("$@$@$@$@$@$@$@   fileInCache.renameTo(newFileToInDiks)   $@$@$@$@$@$@$@");
+
+            /*
+            if(fileInCache == null){
+                System.out.println("fileInCache == null");
+
+            }else if(fileInCache.exists()){
+                System.out.println("fileInCache.exists()");
+                System.out.println("newFileToInDiks.getName: " + newFileToInDiks.getName());
+                System.out.println("- fileInCache.getAbsoluteFile" + fileInCache.getAbsoluteFile());
+
+            }else if(fileInCache.canRead()){
+                System.out.println("fileInCache.canRead()");
+                System.out.println("- fileInCache.getAbsoluteFile" + fileInCache.getAbsoluteFile());
+            }
+            */
+
+            System.out.println("$@$@$@$@$@$@$@   ((((((((())))))))))))   $@$@$@$@$@$@$@");
+
+            /*
+            if(newFileToInDiks == null){
+                System.out.println("newFileToInDiks == null");
+
+            }else if(newFileToInDiks.exists()){
+                System.out.println("newFileToInDiks.exists()");
+                System.out.println("- newFileToInDiks.getAbsoluteFile" + fileInCache.getAbsoluteFile());
+
+            }else if(newFileToInDiks.canRead()){
+                System.out.println("newFileToInDiks.canRead()");
+                System.out.println("- newFileToInDiks.getAbsoluteFile" + fileInCache.getAbsoluteFile());
+            }
+            */
 
             return newFileToInDiks;
 

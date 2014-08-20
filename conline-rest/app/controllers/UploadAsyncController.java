@@ -32,6 +32,7 @@ public class UploadAsyncController extends Controller {
     public static Result fotoFileUpload(String cpf) {
 
         String VAR_ERROR_NAME = "erroMessage";
+        int TEMPO_EXPIRACAO_ARQUIVO_CACHE = 60 * 20; //em Segundos
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart picture = body.getFile(ConstantUtil.KEY_MULTIPARTI_FILE_UPLOAD_FOTO);
@@ -41,7 +42,7 @@ public class UploadAsyncController extends Controller {
             String nomeFileFotoCache = ConstantUtil.PREFIX_FOTO + cpf + "." + extensao;
             //File file = picture.getFile();
 
-            Cache.set(nomeFileFotoCache, picture.getFile());
+            Cache.set(nomeFileFotoCache, picture.getFile(), TEMPO_EXPIRACAO_ARQUIVO_CACHE);
             System.out.println("<<<<<<<< fotoFileUpload -  nomeFileFotoCache: " + nomeFileFotoCache);
 
             return ok(Json.toJson(Json.newObject().put("nomeFileFotoCache", nomeFileFotoCache)));
@@ -57,6 +58,7 @@ public class UploadAsyncController extends Controller {
     public static Result documentoFileUpload(String cpf) {
 
         String VAR_ERROR_NAME = "erroMessage";
+        int TEMPO_EXPIRACAO_ARQUIVO_CACHE = 60 * 20; //em Segundos
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart documento = body.getFile(ConstantUtil.KEY_MULTIPARTI_FILE_UPLOAD_DOCUMENTO);
@@ -65,7 +67,7 @@ public class UploadAsyncController extends Controller {
             String extensao =  ToolsUtil.capturaExtensaoDoMimeType(documento.getContentType());
             String nomeFileDocumentoCache = ConstantUtil.PREFIX_DOCUMENTO + cpf + "." + extensao;
 
-            Cache.set(nomeFileDocumentoCache, documento.getFile());
+            Cache.set(nomeFileDocumentoCache, documento.getFile(), TEMPO_EXPIRACAO_ARQUIVO_CACHE);
 
             String contentType = documento.getContentType();
             System.out.println("<<<<<<<< documentoFileUpload -  nomeFileDocumentoCache: " + nomeFileDocumentoCache);
