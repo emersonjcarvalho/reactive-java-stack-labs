@@ -132,7 +132,7 @@ public class EstudanteModelo {//implements Serializable {
     @Column(name = "EST_NU_ENDERECO", length = 10)
     public String numeroEndereco;
 
-    @NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
+    //@NotEmpty(message =  ValidationsMessages.MSG_NOT_EMPTY)
     @Size(max = 50, message = "Deve conter no maximo {max} digitos")
     @Column(name = "EST_DS_COMPLEMENTO_ENDERECO", length = 50)
     public String complementoEndereco;
