@@ -5,6 +5,8 @@
 # Home page
 GET     /                           controllers.Application.index()
 
+GET     /env-var                    controllers.Application.testEnvVar()
+
 ################################    UPLOAD   ################################
 POST        /upload/foto/:cpf       controllers.UploadAsyncController.fotoFileUpload(cpf: String)
 OPTIONS     /upload/foto      	    controllers.UploadAsyncController.option()

@@ -7,18 +7,18 @@ import models.EstudanteModelo;
  */
 public class ConstantUtil {
 
-    public static final String SES_HOST_SMTP = ToolsUtil.config.getString("SES_HOST_SMTP");
+    public static final String SES_HOST_SMTP = ToolsUtil.config.getString("ses.host.smtp");
 
-    public static final Integer SES_PORT_SMTP = ToolsUtil.config.getInt("SES_PORT_SMTP");
-    public static final String SES_USERNAME_SMTP = ToolsUtil.config.getString("SES_USERNAME_SMTP");
-    public static final String SES_PASSWORD_SMTP = ToolsUtil.config.getString("SES_PASSWORD_SMTP");
+    public static final Integer SES_PORT_SMTP = ToolsUtil.config.getInt("ses.port.smtp");
+    public static final String SES_USERNAME_SMTP = ToolsUtil.config.getString("ses.username.smtp");
+    public static final String SES_PASSWORD_SMTP = ToolsUtil.config.getString("ses.password.smtp");
     //
-    public static final String SES_EMAIL_FROM = ToolsUtil.config.getString("SES_EMAIL_FROM");
-    public static final String SES_EMAIL_TO_OPERACIONAL = ToolsUtil.config.getString("SES_EMAIL_TO_OPERACIONAL");
+    public static final String SES_EMAIL_FROM = ToolsUtil.config.getString("ses.email.from");
+    public static final String SES_EMAIL_TO_OPERACIONAL = ToolsUtil.config.getString("ses.email.to.operacional");
     //public static final String SES_ASSUNTO_OPERACIONAL = "";
     public static final String SES_ASSUNTO_CONFIRMACAO = "Solicitação de Carteirinha de Estudante DCE UNIFACS";
     //
-    public static final String BUCKET_NAME = ToolsUtil.config.getString("BUCKET_NAME");
+    public static final String BUCKET_NAME = ToolsUtil.config.getString("s3.bucket.name");
     public static final String DIRETORIO_FOTOS = "deposito/appCarteirinha/unifacs/fotos/";
     public static final String DIRETORIO_DOCUMENTOS = "deposito/appCarteirinha/unifacs/documentos/";
     //

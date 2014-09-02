@@ -47,6 +47,36 @@ public class Application extends Controller {
     }
     // ########################################################################################################
 
+
+    public static Result testEnvVar() {
+
+        Integer SES_PORT_SMTP = ConstantUtil.SES_PORT_SMTP;
+        String SES_USERNAME_SMTP = ConstantUtil.SES_USERNAME_SMTP;
+        String SES_PASSWORD_SMTP = ConstantUtil.SES_PASSWORD_SMTP;
+        String SES_HOST_SMTP = ConstantUtil.SES_HOST_SMTP;
+
+        System.out.println("");
+
+        System.out.println("SES_PORT_SMTP: "  + SES_PORT_SMTP);
+        System.out.println("SES_USERNAME_SMTP: "  + SES_USERNAME_SMTP);
+        System.out.println("SES_PASSWORD_SMTP: "  + SES_PASSWORD_SMTP);
+        System.out.println("SES_HOST_SMTP: "  + SES_HOST_SMTP);
+
+
+        EmailNotificacaoMessage notificacaoMessage =
+                new EmailNotificacaoMessage(ConstantUtil.SES_ASSUNTO_CONFIRMACAO
+                        , "ERROR: Conteudo HTML nao Carregado"
+                        , "ConstantUtil.getHtmlMsgConfirmacao(estudanteSaved)"
+                        , "emersonjcarvalho@gmail.com");
+
+        MailServiceHelper.sendMailNotificacao(notificacaoMessage);
+
+        System.out.println(":::: MailServiceHelper ::: :");
+
+        return ok(index.render(SES_PORT_SMTP + " | " + SES_USERNAME_SMTP + " | " + SES_PASSWORD_SMTP + " | " + SES_HOST_SMTP));
+    }
+
+
     public static Result index() {
 
         for(int i=1;  i<=20; i++){

@@ -21,9 +21,9 @@ import java.util.logging.Logger;
 public class PagamentoUtil {
 
     //private static final String EMAIL_LOGIN = "carteirinhaonline@gmail.com"; //EMAIL_LOGIN = "emersonjcarvalho@gmail.com";
-    private static final String EMAIL_LOGIN = ToolsUtil.config.getString("EMAIL_LOGIN");
-    private static final String PRODUCTION_TOKEN = ToolsUtil.config.getString("PRODUCTION_TOKEN");
-    private static final String SANDBOX_TOKEN = ToolsUtil.config.getString("SANDBOX_TOKEN");
+    private static final String EMAIL_LOGIN = ToolsUtil.config.getString("pagseguro.email.login");
+    private static final String PRODUCTION_TOKEN = ToolsUtil.config.getString("pagseguro.production.token");
+    private static final String SANDBOX_TOKEN = ToolsUtil.config.getString("pagseguro.sandbox.token");
 
     private static final String  URL_PAGSEGURO_PAY_SERVICE_SANDBOX = "https://ws.sandbox.pagseguro.uol.com.br/v2/checkout";
     private static final String  URL_PAGSEGURO_PAY_SERVICE_PRODUCTION = "https://ws.pagseguro.uol.com.br/v2/checkout";

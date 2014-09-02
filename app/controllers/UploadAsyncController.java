@@ -32,7 +32,7 @@ public class UploadAsyncController extends Controller {
     public static Result fotoFileUpload(String cpf) {
 
         String VAR_ERROR_NAME = "erroMessage";
-        int TEMPO_EXPIRACAO_ARQUIVO_CACHE = 60 * 20; //em Segundos
+        int TEMPO_EXPIRACAO_ARQUIVO_CACHE = 60 * 30; //em Segundos
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart picture = body.getFile(ConstantUtil.KEY_MULTIPARTI_FILE_UPLOAD_FOTO);
@@ -58,7 +58,7 @@ public class UploadAsyncController extends Controller {
     public static Result documentoFileUpload(String cpf) {
 
         String VAR_ERROR_NAME = "erroMessage";
-        int TEMPO_EXPIRACAO_ARQUIVO_CACHE = 60 * 20; //em Segundos
+        int TEMPO_EXPIRACAO_ARQUIVO_CACHE = 60 * 30; //em Segundos
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart documento = body.getFile(ConstantUtil.KEY_MULTIPARTI_FILE_UPLOAD_DOCUMENTO);

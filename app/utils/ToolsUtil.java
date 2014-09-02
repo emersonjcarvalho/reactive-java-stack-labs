@@ -1,13 +1,10 @@
 package utils;
 
-import actors.s3aws.S3FileObject;
-import akka.actor.ActorRef;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import models.EstudanteModelo;
-import models.FieldErrorDTO;
 import models.ValidationErrorDTO;
 import play.cache.Cache;
 
@@ -17,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Set;
 
 /**
@@ -28,13 +24,13 @@ public class ToolsUtil {
     //Objecto possibilita ler infos do arquivo application.conf
     final static Config config = ConfigFactory.load();
 
-    final static String accessKey = config.getString("accessKey");
-    final static String secretKey = config.getString("secretKey");
+    final static String s3AccessKey = config.getString("s3.accesskey");
+    final static String s3AecretKey = config.getString("s3.secretkey");
 
     //public final static Config configValidations = ConfigFactory.load("validations");
 
     //Cliente autenticado do Serviço Amazon AWS
-    public static AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+    public static AWSCredentials awsCredentials = new BasicAWSCredentials(s3AccessKey, s3AecretKey);
 
     //#############################   EhCache built-in Play    ############################################
 
